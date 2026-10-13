@@ -17,7 +17,7 @@
 .pills input{position:absolute;opacity:0;pointer-events:none}
 .pills input:focus-visible+span{outline:2px solid var(--primary)}
 .pills{display:flex;flex-wrap:wrap;gap:6px}
-.pills label{cursor:pointer}
+.pills label{position:relative;cursor:pointer}
 .pills span{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;padding:0 12px;border:1px solid var(--line);border-radius:var(--radius-sm);font-size:15px}
 .pills input:checked+span{border-color:var(--primary);background:var(--primary-50);color:var(--primary);font-weight:600}
 .results-bar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;margin-bottom:22px}
