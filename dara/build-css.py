@@ -38,6 +38,9 @@ def split_rules(css):
 def bucket_of(selector):
     if selector.startswith('.block-page') or selector.startswith('.dara-block-empty'):
         return 'core'
+    # Shared by the home hero and the project hero, so it must load everywhere.
+    if selector == '.hero__bg':
+        return 'core'
     for name, pattern in BUCKETS:
         if re.search(pattern, selector):
             return name
