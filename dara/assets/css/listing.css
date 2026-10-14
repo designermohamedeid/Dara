@@ -25,6 +25,8 @@
 .results-bar__tools{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
 .sort label{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--muted)}
 .sort select{min-height:44px;border:1px solid var(--line);border-radius:var(--radius-sm);padding:0 12px;background:#fff;color:var(--ink)}
+.sort select{-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%235B6676' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;background-size:16px;padding-inline-end:40px}
+[dir=rtl] .sort select{background-position:left 14px center}
 .view-toggle{display:flex;gap:4px;padding:4px;background:var(--surface);border-radius:var(--radius)}
 .view-toggle button{display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 14px;border:0;border-radius:9px;background:transparent;color:var(--muted);font-weight:600;font-size:14px;cursor:pointer}
 .view-toggle button[aria-pressed=true]{background:#fff;color:var(--primary)}
