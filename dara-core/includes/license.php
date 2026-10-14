@@ -467,33 +467,114 @@ add_action( 'wp_footer', 'dara_license_footer_notice', 100 );
 /* ---------- Updates from the license server ---------- */
 
 /**
- * Available updates (cached 12 hours).
+ * Installed versions of the Dara packages.
+ *
+ * @return array package => version ('0' when not installed)
+ */
+function dara_license_installed() {
+	$theme = wp_get_theme( 'dara' );
+	return array(
+		'dara'      => $theme->exists() ? (string) $theme->get( 'Version' ) : '0',
+		'dara-core' => DARA_CORE_VERSION,
+		'dara-pro'  => dara_license_pro_version(),
+	);
+}
+
+/**
+ * Available updates, newer than what is installed.
+ *
+ * Only called from WordPress' own update checks (pre_set_site_transient_update_*), which
+ * WordPress throttles itself. The 1 minute cache only lets the theme and plugin checks of
+ * the same page load share one request, so a new release shows on the next refresh of
+ * Dashboard → Updates. The cache is dropped when the installed versions change.
  *
  * @param bool $force Skip the cache.
  * @return array package => info
  */
 function dara_license_updates( $force = false ) {
-	$cached = get_site_transient( 'dara_updates' );
-	if ( ! $force && is_array( $cached ) ) {
-		return $cached;
+	$installed = dara_license_installed();
+	$cached    = get_site_transient( 'dara_updates' );
+	if ( ! $force && is_array( $cached ) && isset( $cached['installed'], $cached['packages'] ) && $cached['installed'] === $installed ) {
+		return $cached['packages'];
 	}
-	$theme = wp_get_theme( 'dara' );
-	$data  = dara_license_request(
+	$data = dara_license_request(
 		'update',
 		array(
 			'license_key' => dara_license_data()['key'],
 			'domain'      => dara_license_domain(),
-			'packages'    => array(
-				'dara'      => $theme->exists() ? $theme->get( 'Version' ) : '0',
-				'dara-core' => DARA_CORE_VERSION,
-				'dara-pro'  => dara_license_pro_version(),
-			),
+			'packages'    => $installed,
 		)
 	);
-	$out   = is_wp_error( $data ) || empty( $data['packages'] ) ? array() : (array) $data['packages'];
-	set_site_transient( 'dara_updates', $out, is_wp_error( $data ) ? HOUR_IN_SECONDS : 12 * HOUR_IN_SECONDS );
+	$out  = array();
+	if ( ! is_wp_error( $data ) && ! empty( $data['packages'] ) && is_array( $data['packages'] ) ) {
+		foreach ( $data['packages'] as $slug => $info ) {
+			// Never offer the same or an older version, whatever the server says.
+			if ( isset( $installed[ $slug ], $info['version'] ) && version_compare( (string) $info['version'], $installed[ $slug ], '>' ) ) {
+				$out[ $slug ] = wp_parse_args(
+					(array) $info,
+					array(
+						'package'      => '',
+						'changelog'    => '',
+						'requires'     => '',
+						'tested'       => '',
+						'requires_php' => '',
+						'date'         => '',
+					)
+				);
+			}
+		}
+	}
+	$failed = is_wp_error( $data ) || ( ! empty( $data['_code'] ) && 200 !== $data['_code'] );
+	set_site_transient(
+		'dara_updates',
+		array(
+			'installed' => $installed,
+			'packages'  => $out,
+		),
+		$failed ? 5 * MINUTE_IN_SECONDS : MINUTE_IN_SECONDS
+	);
 	return $out;
 }
+
+/**
+ * Drop Dara offers WordPress kept from an earlier check once that version (or a newer one)
+ * is installed, e.g. after uploading the zip by hand.
+ *
+ * @param mixed $transient update_themes / update_plugins transient.
+ * @return mixed
+ */
+function dara_license_drop_stale( $transient ) {
+	if ( ! is_object( $transient ) || empty( $transient->response ) || ! is_array( $transient->response ) ) {
+		return $transient;
+	}
+	$installed = dara_license_installed();
+	$keys      = array(
+		'dara'                            => 'dara',
+		plugin_basename( DARA_CORE_FILE ) => 'dara-core',
+		'dara-pro/dara-pro.php'           => 'dara-pro',
+	);
+	foreach ( $keys as $key => $slug ) {
+		if ( ! isset( $transient->response[ $key ] ) ) {
+			continue;
+		}
+		$offer = $transient->response[ $key ];
+		$new   = is_array( $offer ) ? ( isset( $offer['new_version'] ) ? $offer['new_version'] : '' ) : ( isset( $offer->new_version ) ? $offer->new_version : '' );
+		if ( '0' === $installed[ $slug ] || ! version_compare( (string) $new, $installed[ $slug ], '>' ) ) {
+			unset( $transient->response[ $key ] );
+		}
+	}
+	return $transient;
+}
+add_filter( 'site_transient_update_themes', 'dara_license_drop_stale' );
+add_filter( 'site_transient_update_plugins', 'dara_license_drop_stale' );
+
+/**
+ * Forget the cached answer after any install or update (before WordPress' own re-check at 10).
+ */
+function dara_license_flush_updates() {
+	delete_site_transient( 'dara_updates' );
+}
+add_action( 'upgrader_process_complete', 'dara_license_flush_updates', 9 );
 
 /**
  * Force a fresh check from Dashboard → Updates → "Check again".
