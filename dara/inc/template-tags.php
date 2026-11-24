@@ -27,7 +27,7 @@ function dara_defaults() {
 		'hero_image'         => 0,
 		'hero_eyebrow'       => __( 'Properties for sale, rent and new developments', 'dara' ),
 		'hero_title'         => __( 'Find your next property with confidence', 'dara' ),
-		'hero_text'          => __( 'Verified listings with full details, clear prices and licensed agents who stay with you until the contract is signed.', 'dara' ),
+		'hero_text'          => __( 'Detailed listings, clear prices and an agent who stays with you until the contract is signed.', 'dara' ),
 		'hero_popular'       => '',
 		// Featured.
 		'show_featured'      => true,
@@ -55,7 +55,7 @@ function dara_defaults() {
 				'megaphone | ' . __( 'Real estate marketing', 'dara' ) . ' | ' . __( 'Professional photography and digital campaigns that reach the right buyer fast.', 'dara' ) . ' | ',
 				'key | ' . __( 'Property management', 'dara' ) . ' | ' . __( 'Rent collection, maintenance and renewals with clear periodic reports for owners.', 'dara' ) . ' | ',
 				'chart | ' . __( 'Financing solutions', 'dara' ) . ' | ' . __( 'We compare mortgage offers and guide you through the process until approval.', 'dara' ) . ' | ',
-				'clipboard | ' . __( 'Property valuation', 'dara' ) . ' | ' . __( 'Certified valuation of the fair market value before you buy or sell.', 'dara' ) . ' | ',
+				'clipboard | ' . __( 'Property valuation', 'dara' ) . ' | ' . __( 'A clear estimate of the fair market value before you buy or sell.', 'dara' ) . ' | ',
 			)
 		),
 		// Why us.
@@ -67,7 +67,7 @@ function dara_defaults() {
 		'why_points'         => implode(
 			"\n",
 			array(
-				__( 'Listings inspected and verified', 'dara' ),
+				__( 'Complete, up-to-date listing details', 'dara' ),
 				__( 'Published prices with no hidden fees', 'dara' ),
 				__( 'A dedicated agent on phone and WhatsApp', 'dara' ),
 				__( 'Help with financing, documentation and transfer', 'dara' ),
@@ -619,4 +619,16 @@ function dara_compare_button( $post_id, $variant = 'card' ) {
 		dara_icon( 'compare', 'inline' === $variant ? 18 : 20 ), // phpcs:ignore WordPress.Security.EscapeOutput
 		'inline' === $variant ? esc_html__( 'Compare', 'dara' ) : ''
 	);
+}
+
+/**
+ * Label of one project unit row, used in the inquiry form ("A1 — Apartment").
+ *
+ * @param array $unit Unit columns: model | type | area | bedrooms | price | status.
+ * @return string
+ */
+function dara_project_unit_label( $unit ) {
+	$model = isset( $unit[0] ) ? trim( $unit[0] ) : '';
+	$type  = isset( $unit[1] ) ? trim( $unit[1] ) : '';
+	return $model && $type ? $model . ' — ' . $type : $model . $type;
 }

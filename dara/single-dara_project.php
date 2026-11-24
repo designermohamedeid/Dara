@@ -173,17 +173,23 @@ while ( have_posts() ) :
 							<th scope="col"><?php esc_html_e( 'Bedrooms', 'dara' ); ?></th>
 							<th scope="col"><?php esc_html_e( 'Price', 'dara' ); ?></th>
 							<th scope="col"><?php esc_html_e( 'Status', 'dara' ); ?></th>
+							<th scope="col"><span class="screen-reader-text"><?php esc_html_e( 'Inquire', 'dara' ); ?></span></th>
 						</tr></thead>
 						<tbody>
 							<?php foreach ( $dara_units as $dara_u ) : ?>
 								<?php $dara_state = isset( $dara_states[ strtolower( $dara_u[5] ) ] ) ? $dara_states[ strtolower( $dara_u[5] ) ] : $dara_states['available']; ?>
-								<tr>
-									<th scope="row"><?php echo esc_html( $dara_u[0] ); ?></th>
-									<td><?php echo esc_html( $dara_u[1] ); ?></td>
-									<td><?php echo esc_html( is_numeric( $dara_u[2] ) ? dara_number( $dara_u[2] ) . ' ' . __( 'm²', 'dara' ) : $dara_u[2] ); ?></td>
-									<td><?php echo esc_html( $dara_u[3] ); ?></td>
-									<td class="units__price"><?php echo esc_html( is_numeric( str_replace( ',', '', $dara_u[4] ) ) ? dara_number( str_replace( ',', '', $dara_u[4] ) ) . ' ' . dara_setting( 'currency' ) : $dara_u[4] ); ?></td>
-									<td><span class="status status--<?php echo esc_attr( $dara_state[1] ); ?>"><?php echo esc_html( $dara_state[0] ); ?></span></td>
+								<tr class="units__row units__row--<?php echo esc_attr( $dara_state[1] ); ?>">
+									<th scope="row" class="units__model"><?php echo esc_html( $dara_u[0] ); ?></th>
+									<td class="units__type" data-label="<?php esc_attr_e( 'Type', 'dara' ); ?>"><?php echo esc_html( $dara_u[1] ); ?></td>
+									<td class="units__area" data-label="<?php esc_attr_e( 'Area', 'dara' ); ?>"><?php echo esc_html( is_numeric( $dara_u[2] ) ? dara_number( $dara_u[2] ) . ' ' . __( 'm²', 'dara' ) : $dara_u[2] ); ?></td>
+									<td class="units__beds" data-label="<?php esc_attr_e( 'Bedrooms', 'dara' ); ?>"><?php echo esc_html( $dara_u[3] ); ?></td>
+									<td class="units__price"><bdi><?php echo esc_html( is_numeric( str_replace( ',', '', $dara_u[4] ) ) ? dara_number( str_replace( ',', '', $dara_u[4] ) ) . ' ' . dara_setting( 'currency' ) : $dara_u[4] ); ?></bdi></td>
+									<td class="units__status"><span class="status status--<?php echo esc_attr( $dara_state[1] ); ?>"><?php echo esc_html( $dara_state[0] ); ?></span></td>
+									<td class="units__ask">
+										<?php if ( 'sold' !== $dara_state[1] ) : ?>
+											<a class="units__ask-link" href="#lead-form" data-unit="<?php echo esc_attr( dara_project_unit_label( $dara_u ) ); ?>"><?php esc_html_e( 'Ask about this model', 'dara' ); ?></a>
+										<?php endif; ?>
+									</td>
 								</tr>
 							<?php endforeach; ?>
 						</tbody>
@@ -238,12 +244,19 @@ while ( have_posts() ) :
 				<label class="form__field"><span><?php esc_html_e( 'Name', 'dara' ); ?></span><input type="text" name="lead_name" required autocomplete="name"></label>
 				<label class="form__field"><span><?php esc_html_e( 'Mobile number', 'dara' ); ?></span><input type="tel" name="lead_phone" required dir="ltr" inputmode="tel" autocomplete="tel"></label>
 				<?php
-				$dara_unit_types = array_unique( array_filter( wp_list_pluck( $dara_units, 1 ) ) );
-				if ( $dara_unit_types ) :
+				$dara_unit_options = array();
+				foreach ( $dara_units as $dara_u ) {
+					if ( 'sold' !== strtolower( $dara_u[5] ) ) {
+						$dara_unit_options[] = dara_project_unit_label( $dara_u );
+					}
+				}
+				$dara_unit_options = array_unique( array_filter( $dara_unit_options ) );
+				if ( $dara_unit_options ) :
 					?>
-					<label class="form__field form__field--full"><span><?php esc_html_e( 'Unit type', 'dara' ); ?></span>
-						<select name="lead_unit">
-							<?php foreach ( $dara_unit_types as $dara_ut ) : ?>
+					<label class="form__field form__field--full"><span><?php esc_html_e( 'Unit model', 'dara' ); ?></span>
+						<select name="lead_unit" id="lead-unit">
+							<option value=""><?php esc_html_e( 'Any model', 'dara' ); ?></option>
+							<?php foreach ( $dara_unit_options as $dara_ut ) : ?>
 								<option><?php echo esc_html( $dara_ut ); ?></option>
 							<?php endforeach; ?>
 						</select>

@@ -555,6 +555,9 @@ function dara_demo_run_import( $lang = 'ar', $set_front = true, $set_menus = tru
 	if ( empty( $settings['currency'] ) ) {
 		$settings['currency'] = $t( 'ر.س', 'SAR' );
 	}
+	if ( empty( $settings['currency_code'] ) ) {
+		$settings['currency_code'] = 'SAR';
+	}
 	update_option( 'dara_core_settings', $settings );
 
 	update_option(

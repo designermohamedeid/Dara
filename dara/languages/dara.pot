@@ -663,12 +663,6 @@ msgstr ""
 msgid "Find your next property with confidence"
 msgstr ""
 
-#: inc/template-tags.php:30
-msgid ""
-"Verified listings with full details, clear prices and licensed agents who "
-"stay with you until the contract is signed."
-msgstr ""
-
 #: inc/template-tags.php:34
 msgid "Hand-picked"
 msgstr ""
@@ -740,10 +734,6 @@ msgstr ""
 msgid "Property valuation"
 msgstr ""
 
-#: inc/template-tags.php:58
-msgid "Certified valuation of the fair market value before you buy or sell."
-msgstr ""
-
 #: inc/template-tags.php:64
 msgid "Why us?"
 msgstr ""
@@ -756,10 +746,6 @@ msgstr ""
 msgid ""
 "We show every detail you need to decide with confidence, and arrange the "
 "viewing, negotiation and paperwork for you."
-msgstr ""
-
-#: inc/template-tags.php:70
-msgid "Listings inspected and verified"
 msgstr ""
 
 #: inc/template-tags.php:71
@@ -1434,4 +1420,36 @@ msgstr ""
 
 #: template-parts/property/filters.php:121
 msgid "Show results"
+msgstr ""
+
+msgid ""
+"Detailed listings, clear prices and an agent who stays with you until the "
+"contract is signed."
+msgstr ""
+
+msgid "Complete, up-to-date listing details"
+msgstr ""
+
+msgid "A clear estimate of the fair market value before you buy or sell."
+msgstr ""
+
+msgid "Inquire"
+msgstr ""
+
+msgid "Ask about this model"
+msgstr ""
+
+msgid "Unit model"
+msgstr ""
+
+msgid "Any model"
+msgstr ""
+
+msgid "Contact %s"
+msgstr ""
+
+msgid "Show compare list"
+msgstr ""
+
+msgid "Minimize compare list"
 msgstr ""

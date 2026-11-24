@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  */
 function dara_setting( $key ) {
 	$defaults = array(
-		'currency'    => __( 'SAR', 'dara-core' ),
+		'currency'    => '',
 		'lead_email'  => get_option( 'admin_email' ),
 		'office_fal'  => '',
 		'office_cr'   => '',
@@ -25,7 +25,87 @@ function dara_setting( $key ) {
 	);
 	$options  = (array) get_option( 'dara_core_settings', array() );
 	$value    = isset( $options[ $key ] ) && '' !== $options[ $key ] ? $options[ $key ] : ( isset( $defaults[ $key ] ) ? $defaults[ $key ] : '' );
+	if ( 'currency' === $key && '' === $value ) {
+		$value = dara_currency_symbol( dara_currency_code() );
+	}
 	return apply_filters( 'dara_setting', $value, $key );
+}
+
+/**
+ * Supported currencies: ISO 4217 code => short label shown after prices.
+ *
+ * @return array<string,string>
+ */
+function dara_currencies() {
+	return apply_filters(
+		'dara_currencies',
+		array(
+			'SAR' => __( 'SAR', 'dara-core' ),
+			'EGP' => __( 'EGP', 'dara-core' ),
+			'AED' => __( 'AED', 'dara-core' ),
+			'KWD' => __( 'KWD', 'dara-core' ),
+			'QAR' => __( 'QAR', 'dara-core' ),
+			'BHD' => __( 'BHD', 'dara-core' ),
+			'OMR' => __( 'OMR', 'dara-core' ),
+			'JOD' => __( 'JOD', 'dara-core' ),
+			'MAD' => __( 'MAD', 'dara-core' ),
+			'USD' => __( 'USD', 'dara-core' ),
+			'EUR' => __( 'EUR', 'dara-core' ),
+			'GBP' => __( 'GBP', 'dara-core' ),
+		)
+	);
+}
+
+/**
+ * Default short label for a currency code (translated, e.g. "ر.س" in Arabic).
+ *
+ * @param string $code ISO 4217 code.
+ * @return string
+ */
+function dara_currency_symbol( $code ) {
+	$list = dara_currencies();
+	return isset( $list[ $code ] ) ? $list[ $code ] : $code;
+}
+
+/**
+ * ISO 4217 currency code used for prices in structured data.
+ *
+ * Reads the "Currency" setting. Sites saved before that setting existed only
+ * have a free text label, so the code is guessed from it (ر.س → SAR, جنيه → EGP…).
+ *
+ * @return string
+ */
+function dara_currency_code() {
+	$options = (array) get_option( 'dara_core_settings', array() );
+	$code    = isset( $options['currency_code'] ) ? strtoupper( (string) $options['currency_code'] ) : '';
+	if ( ! preg_match( '/^[A-Z]{3}$/', $code ) ) {
+		$code  = 'SAR';
+		$label = isset( $options['currency'] ) ? (string) $options['currency'] : '';
+		$guess = array(
+			'EGP' => array( 'EGP', 'ج.م', 'جم', 'جنيه', 'E£', 'LE' ),
+			'AED' => array( 'AED', 'د.إ', 'درهم إماراتي', 'درهم' ),
+			'KWD' => array( 'KWD', 'د.ك', 'دينار كويتي' ),
+			'QAR' => array( 'QAR', 'ر.ق', 'ريال قطري' ),
+			'BHD' => array( 'BHD', 'د.ب', 'دينار بحريني' ),
+			'OMR' => array( 'OMR', 'ر.ع', 'ريال عماني' ),
+			'JOD' => array( 'JOD', 'د.أ', 'دينار أردني' ),
+			'MAD' => array( 'MAD', 'د.م', 'درهم مغربي' ),
+			'USD' => array( 'USD', '$', 'دولار' ),
+			'EUR' => array( 'EUR', '€', 'يورو' ),
+			'GBP' => array( 'GBP', '£', 'جنيه إسترليني' ),
+		);
+		$found = 0;
+		foreach ( $guess as $iso => $needles ) {
+			foreach ( $needles as $needle ) {
+				// Longest match wins, so "جنيه إسترليني" beats "جنيه" and "درهم مغربي" beats "درهم".
+				if ( '' !== $label && false !== mb_stripos( $label, $needle ) && mb_strlen( $needle ) > $found ) {
+					$code  = $iso;
+					$found = mb_strlen( $needle );
+				}
+			}
+		}
+	}
+	return (string) apply_filters( 'dara_currency_code', $code );
 }
 
 /**

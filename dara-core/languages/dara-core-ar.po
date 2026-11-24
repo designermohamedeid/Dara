@@ -94,10 +94,6 @@ msgstr "الإعدادات"
 msgid "Currency label"
 msgstr "رمز العملة"
 
-#: includes/admin.php:205
-msgid "Shown after prices, e.g. SAR, EGP, AED."
-msgstr "يظهر بعد الأسعار، مثل: ر.س، ج.م، د.إ."
-
 #: includes/admin.php:206
 msgid "Leads email"
 msgstr "بريد استقبال الطلبات"
@@ -852,3 +848,49 @@ msgstr "المميزات"
 #: includes/post-types.php:146
 msgid "Feature"
 msgstr "ميزة"
+
+msgid "EGP"
+msgstr "ج.م"
+
+msgid "AED"
+msgstr "د.إ"
+
+msgid "KWD"
+msgstr "د.ك"
+
+msgid "QAR"
+msgstr "ر.ق"
+
+msgid "BHD"
+msgstr "د.ب"
+
+msgid "OMR"
+msgstr "ر.ع"
+
+msgid "JOD"
+msgstr "د.أ"
+
+msgid "MAD"
+msgstr "د.م"
+
+msgid "USD"
+msgstr "دولار"
+
+msgid "EUR"
+msgstr "يورو"
+
+msgid "GBP"
+msgstr "جنيه إسترليني"
+
+msgid "Currency"
+msgstr "العملة"
+
+msgid "Used for every price and for the price currency search engines read."
+msgstr "تُستخدم مع كل الأسعار، وهي العملة التي تقرأها محركات البحث."
+
+msgid ""
+"Optional. Shown after prices on cards, details, compare and the mortgage "
+"calculator. Leave empty to use the short name of the currency above."
+msgstr ""
+"اختياري. يظهر بعد الأسعار في البطاقات والتفاصيل والمقارنة وحاسبة التمويل. "
+"اتركه فارغًا لاستخدام الاسم المختصر للعملة المختارة."

@@ -125,13 +125,35 @@ defined( 'ABSPATH' ) || exit;
 	</div>
 </footer>
 
-<?php if ( dara_mod( 'whatsapp' ) || dara_mod( 'phone' ) ) : ?>
-	<div class="mobile-bar">
-		<?php if ( dara_mod( 'phone' ) ) : ?>
-			<a class="btn btn--primary" href="tel:<?php echo esc_attr( preg_replace( '/[^0-9+]/', '', dara_mod( 'phone' ) ) ); ?>"><?php dara_the_icon( 'phone', 18 ); ?><?php esc_html_e( 'Call us', 'dara' ); ?></a>
+<?php
+// On a property page the bottom bar calls the property's agent, not the office,
+// so visitors never see two different numbers for the same listing.
+$dara_bar = array(
+	'phone'    => dara_mod( 'phone' ),
+	'whatsapp' => dara_mod( 'whatsapp' ) ? 'https://wa.me/' . preg_replace( '/\D+/', '', dara_mod( 'whatsapp' ) ) : '',
+	'call'     => __( 'Call us', 'dara' ),
+	'label'    => '',
+);
+if ( is_singular( 'dara_property' ) && function_exists( 'dara_get_agent' ) ) {
+	$dara_bar_agent = dara_get_agent( get_queried_object_id() );
+	if ( $dara_bar_agent['phone'] || $dara_bar_agent['whatsapp'] ) {
+		$dara_bar = array(
+			'phone'    => $dara_bar_agent['phone'],
+			'whatsapp' => $dara_bar_agent['whatsapp'] ? dara_whatsapp_url( $dara_bar_agent['whatsapp'], sprintf( /* translators: 1: property title, 2: URL. */ __( 'Hello, I am interested in: %1$s %2$s', 'dara' ), get_the_title( get_queried_object_id() ), get_permalink( get_queried_object_id() ) ) ) : '',
+			'call'     => __( 'Call', 'dara' ),
+			/* translators: %s: agent name. */
+			'label'    => sprintf( __( 'Contact %s', 'dara' ), $dara_bar_agent['name'] ),
+		);
+	}
+}
+?>
+<?php if ( $dara_bar['phone'] || $dara_bar['whatsapp'] ) : ?>
+	<div class="mobile-bar"<?php echo $dara_bar['label'] ? ' role="region" aria-label="' . esc_attr( $dara_bar['label'] ) . '"' : ''; ?>>
+		<?php if ( $dara_bar['phone'] ) : ?>
+			<a class="btn btn--primary" href="tel:<?php echo esc_attr( preg_replace( '/[^0-9+]/', '', $dara_bar['phone'] ) ); ?>"><?php dara_the_icon( 'phone', 18 ); ?><?php echo esc_html( $dara_bar['call'] ); ?></a>
 		<?php endif; ?>
-		<?php if ( dara_mod( 'whatsapp' ) ) : ?>
-			<a class="btn btn--outline" href="<?php echo esc_url( 'https://wa.me/' . preg_replace( '/\D+/', '', dara_mod( 'whatsapp' ) ) ); ?>" target="_blank" rel="noopener"><?php dara_the_icon( 'whatsapp', 18 ); ?><?php esc_html_e( 'WhatsApp', 'dara' ); ?></a>
+		<?php if ( $dara_bar['whatsapp'] ) : ?>
+			<a class="btn btn--outline" href="<?php echo esc_url( $dara_bar['whatsapp'] ); ?>" target="_blank" rel="noopener"><?php dara_the_icon( 'whatsapp', 18 ); ?><?php esc_html_e( 'WhatsApp', 'dara' ); ?></a>
 		<?php endif; ?>
 	</div>
 <?php endif; ?>

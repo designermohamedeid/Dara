@@ -685,14 +685,6 @@ msgstr "منصة عقارية للبيع والإيجار ومشاريع الم�
 msgid "Find your next property with confidence"
 msgstr "اعثر على عقارك القادم بثقة ووضوح"
 
-#: inc/template-tags.php:30
-msgid ""
-"Verified listings with full details, clear prices and licensed agents who "
-"stay with you until the contract is signed."
-msgstr ""
-"عقارات موثّقة بتفاصيل كاملة، أسعار واضحة، ومسوّقون معتمدون يرافقونك حتى "
-"توقيع العقد."
-
 #: inc/template-tags.php:34
 msgid "Hand-picked"
 msgstr "عقارات مختارة"
@@ -766,10 +758,6 @@ msgstr "نقارن لك عروض التمويل العقاري ونرافقك ف
 msgid "Property valuation"
 msgstr "التقييم العقاري"
 
-#: inc/template-tags.php:58
-msgid "Certified valuation of the fair market value before you buy or sell."
-msgstr "تقييم معتمد يحدد القيمة السوقية العادلة قبل البيع أو الشراء."
-
 #: inc/template-tags.php:64
 msgid "Why us?"
 msgstr "لماذا نحن؟"
@@ -785,10 +773,6 @@ msgid ""
 msgstr ""
 "نعرض كل التفاصيل التي تحتاجها لتقرر بثقة، ونرتّب لك المعاينة والتفاوض "
 "والتوثيق."
-
-#: inc/template-tags.php:70
-msgid "Listings inspected and verified"
-msgstr "عقارات تمت معاينتها والتحقق من بياناتها"
 
 #: inc/template-tags.php:71
 msgid "Published prices with no hidden fees"
@@ -1479,3 +1463,35 @@ msgstr "المميزات"
 #: template-parts/property/filters.php:121
 msgid "Show results"
 msgstr "عرض النتائج"
+
+msgid ""
+"Detailed listings, clear prices and an agent who stays with you until the "
+"contract is signed."
+msgstr "إعلانات بتفاصيل كاملة وأسعار واضحة، ومسوّق يتابع معك حتى توقيع العقد."
+
+msgid "Complete, up-to-date listing details"
+msgstr "بيانات كاملة ومحدّثة لكل عقار"
+
+msgid "A clear estimate of the fair market value before you buy or sell."
+msgstr "تقدير واضح للقيمة السوقية العادلة قبل البيع أو الشراء."
+
+msgid "Inquire"
+msgstr "استفسار"
+
+msgid "Ask about this model"
+msgstr "استفسر عن هذا النموذج"
+
+msgid "Unit model"
+msgstr "نموذج الوحدة"
+
+msgid "Any model"
+msgstr "أي نموذج"
+
+msgid "Contact %s"
+msgstr "تواصل مع %s"
+
+msgid "Show compare list"
+msgstr "إظهار قائمة المقارنة"
+
+msgid "Minimize compare list"
+msgstr "تصغير قائمة المقارنة"
