@@ -189,7 +189,9 @@ function dara_core_register_settings() {
 				foreach ( array( 'currency', 'office_fal', 'office_cr', 'agent_name', 'agent_phone', 'agent_wa' ) as $key ) {
 					$clean[ $key ] = isset( $input[ $key ] ) ? sanitize_text_field( $input[ $key ] ) : '';
 				}
-				$clean['lead_email'] = isset( $input['lead_email'] ) ? sanitize_email( $input['lead_email'] ) : '';
+				$clean['lead_email']    = isset( $input['lead_email'] ) ? sanitize_email( $input['lead_email'] ) : '';
+				$code                   = isset( $input['currency_code'] ) ? strtoupper( sanitize_key( $input['currency_code'] ) ) : '';
+				$clean['currency_code'] = isset( dara_currencies()[ $code ] ) ? $code : 'SAR';
 				return $clean;
 			},
 		)
@@ -202,7 +204,7 @@ add_action( 'admin_init', 'dara_core_register_settings' );
  */
 function dara_core_render_settings() {
 	$fields = array(
-		'currency'    => array( __( 'Currency label', 'dara-core' ), __( 'Shown after prices, e.g. SAR, EGP, AED.', 'dara-core' ) ),
+		'currency'    => array( __( 'Currency label', 'dara-core' ), __( 'Optional. Shown after prices on cards, details, compare and the mortgage calculator. Leave empty to use the short name of the currency above.', 'dara-core' ) ),
 		'lead_email'  => array( __( 'Leads email', 'dara-core' ), __( 'Viewing requests and forms are sent here (and to the property agent).', 'dara-core' ) ),
 		'office_fal'  => array( __( 'Office FAL license', 'dara-core' ), '' ),
 		'office_cr'   => array( __( 'Commercial registration', 'dara-core' ), '' ),
@@ -213,12 +215,20 @@ function dara_core_render_settings() {
 	echo '<div class="wrap"><h1>' . esc_html__( 'Dara settings', 'dara-core' ) . '</h1><form method="post" action="options.php">';
 	settings_fields( 'dara_core_settings' );
 	echo '<table class="form-table" role="presentation"><tbody>';
+	$options = (array) get_option( 'dara_core_settings', array() );
+	$current = dara_currency_code();
+	echo '<tr><th scope="row"><label for="dara-currency_code">' . esc_html__( 'Currency', 'dara-core' ) . '</label></th><td><select id="dara-currency_code" name="dara_core_settings[currency_code]">';
+	foreach ( dara_currencies() as $code => $label ) {
+		printf( '<option value="%1$s"%2$s>%1$s — %3$s</option>', esc_attr( $code ), selected( $current, $code, false ), esc_html( $label ) );
+	}
+	echo '</select><p class="description">' . esc_html__( 'Used for every price and for the price currency search engines read.', 'dara-core' ) . '</p></td></tr>';
 	foreach ( $fields as $key => $field ) {
+		$value = 'currency' === $key ? ( isset( $options['currency'] ) ? $options['currency'] : '' ) : dara_setting( $key );
 		printf(
 			'<tr><th scope="row"><label for="dara-%1$s">%2$s</label></th><td><input class="regular-text" id="dara-%1$s" name="dara_core_settings[%1$s]" value="%3$s">%4$s</td></tr>',
 			esc_attr( $key ),
 			esc_html( $field[0] ),
-			esc_attr( dara_setting( $key ) ),
+			esc_attr( $value ),
 			$field[1] ? '<p class="description">' . esc_html( $field[1] ) . '</p>' : ''
 		);
 	}

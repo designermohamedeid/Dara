@@ -75,6 +75,37 @@ function dara_demo_bar() {
 add_action( 'wp_footer', 'dara_demo_bar', 99 );
 
 /**
+ * Thin strip at the top of every page: the listings, names, numbers and licenses are sample data.
+ */
+function dara_demo_site_notice() {
+	if ( is_admin() ) {
+		return;
+	}
+	$text = is_rtl()
+		? 'موقع تجريبي لقالب Dara: كل العقارات والأسماء وأرقام التواصل والتراخيص بيانات للعرض فقط، والنماذج لا تُرسل لأي جهة.'
+		: 'Dara theme demo: all listings, names, phone numbers and licenses are sample data, and forms are not sent anywhere.';
+	echo '<p class="dara-demo-notice" role="note">' . esc_html( $text ) . '</p>';
+	echo '<style>.dara-demo-notice{margin:0;padding:6px 16px;background:#0E1A22;color:#fff;font:500 13px/1.5 var(--font,system-ui,sans-serif);text-align:center}</style>';
+}
+add_action( 'wp_body_open', 'dara_demo_site_notice', 1 );
+
+/**
+ * Demo forms say plainly that nothing was sent.
+ *
+ * @param string $translation Translated text.
+ * @param string $text        Original text.
+ * @param string $domain      Text domain.
+ * @return string
+ */
+function dara_demo_site_form_notice( $translation, $text, $domain ) {
+	if ( 'dara-core' === $domain && 'Thank you! We received your request and will contact you shortly.' === $text ) {
+		return is_rtl() ? 'هذا موقع تجريبي: النموذج يعمل، لكن طلبك لم يُحفظ ولم يُرسل لأي جهة.' : 'This is a demo: the form works, but your request was not stored or sent to anyone.';
+	}
+	return $translation;
+}
+add_filter( 'gettext', 'dara_demo_site_form_notice', 10, 3 );
+
+/**
  * Demo forms: accept the submission, then drop it (no stored leads, no email).
  *
  * @param int $lead_id Lead post ID.

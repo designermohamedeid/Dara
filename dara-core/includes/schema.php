@@ -36,12 +36,30 @@ function dara_core_schema() {
 	$key   = 'dara_project' === get_post_type( $id ) ? '_dara_price_from' : '_dara_price';
 	$price = get_post_meta( $id, $key, true );
 	if ( '' !== $price ) {
+		$currency       = dara_currency_code();
 		$data['offers'] = array(
 			'@type'         => 'Offer',
 			'price'         => (float) $price,
-			'priceCurrency' => apply_filters( 'dara_currency_code', 'SAR' ),
+			'priceCurrency' => $currency,
 			'availability'  => 'https://schema.org/InStock',
 		);
+		$period = get_post_meta( $id, '_dara_price_period', true );
+		$units  = array(
+			'year'  => 'ANN',
+			'month' => 'MON',
+			'day'   => 'DAY',
+		);
+		if ( '_dara_price' === $key && 'rent' === get_post_meta( $id, '_dara_purpose', true ) ) {
+			$data['offers']['businessFunction'] = 'http://purl.org/goodrelations/v1#LeaseOut';
+			if ( isset( $units[ $period ] ) ) {
+				$data['offers']['priceSpecification'] = array(
+					'@type'         => 'UnitPriceSpecification',
+					'price'         => (float) $price,
+					'priceCurrency' => $currency,
+					'unitCode'      => $units[ $period ],
+				);
+			}
+		}
 	}
 
 	$lat     = get_post_meta( $id, '_dara_lat', true );

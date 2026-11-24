@@ -67,6 +67,8 @@ function dara_assets() {
 				'cmpNow'     => __( 'Compare now', 'dara' ),
 				'cmpClear'   => __( 'Clear', 'dara' ),
 				'cmpMin'     => __( 'Add one more property to compare', 'dara' ),
+				'cmpShow'    => __( 'Show compare list', 'dara' ),
+				'cmpHide'    => __( 'Minimize compare list', 'dara' ),
 				'remove'     => __( 'Remove', 'dara' ),
 			),
 		)

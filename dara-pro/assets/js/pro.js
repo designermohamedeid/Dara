@@ -133,13 +133,17 @@
 		return u.origin + u.pathname + q + "ids=" + list.map(function (x) { return Number(x.id); }).join(",") + u.hash;
 	}
 	var cmpBar;
+	var CMP_MIN_KEY = "dara_compare_min";
+	function cmpMin() { try { return sessionStorage.getItem(CMP_MIN_KEY) === "1"; } catch (err) { return false; } }
+	function setCmpMin(on) { try { sessionStorage.setItem(CMP_MIN_KEY, on ? "1" : "0"); } catch (err) { /* private mode */ } }
 	function paintCmp() {
 		var list = getCmp();
 		var ids = list.map(function (x) { return Number(x.id); });
 		$$("[data-compare]").forEach(function (b) {
 			b.setAttribute("aria-pressed", ids.indexOf(Number(b.getAttribute("data-compare"))) > -1 ? "true" : "false");
 		});
-		if (!data.compareUrl || $("[data-compare-page]")) { return; }
+		// Only where properties can be added (listings, property pages, home): never on articles or plain pages.
+		if (!data.compareUrl || $("[data-compare-page]") || !$("[data-compare]")) { return; }
 		if (!cmpBar) {
 			cmpBar = doc.createElement("div");
 			cmpBar.className = "cmp-bar";
@@ -153,9 +157,13 @@
 					paintCmp();
 				}
 				if (e.target.closest("[data-cmp-clear]")) { setCmp([]); paintCmp(); }
+				if (e.target.closest("[data-cmp-toggle]")) { setCmpMin(!cmpMin()); paintCmp(); }
 			});
 		}
+		var min = cmpMin();
 		doc.body.classList.toggle("has-cmp-bar", list.length > 0);
+		doc.body.classList.toggle("has-cmp-bar--min", list.length > 0 && min);
+		cmpBar.classList.toggle("is-min", min);
 		cmpBar.hidden = !list.length;
 		if (!list.length) { cmpBar.innerHTML = ""; return; }
 		var esc = function (s) { var d = doc.createElement("div"); d.textContent = s || ""; return d.innerHTML; };
@@ -167,7 +175,8 @@
 		var ready = list.length > 1;
 		cmpBar.innerHTML =
 			'<div class="container cmp-bar__inner">' +
-			'<p class="cmp-bar__title"><strong>' + esc(i18n.cmpTitle) + "</strong> <span>" + list.length + " / " + CMP_MAX + "</span></p>" +
+			'<p class="cmp-bar__title"><strong>' + esc(i18n.cmpTitle) + '</strong> <bdi dir="ltr">' + list.length + " / " + CMP_MAX + "</bdi>" +
+			'<button type="button" class="cmp-bar__toggle" data-cmp-toggle aria-expanded="' + (min ? "false" : "true") + '" aria-label="' + esc(min ? (i18n.cmpShow || "Show") : (i18n.cmpHide || "Hide")) + '"><span aria-hidden="true">' + (min ? "+" : "&minus;") + "</span></button></p>" +
 			'<ul class="cmp-bar__list">' + items + "</ul>" +
 			'<div class="cmp-bar__actions">' +
 			(ready ? '<a class="btn btn--primary btn--sm" href="' + esc(cmpUrl(list)) + '">' + esc(i18n.cmpNow) + "</a>" : '<span class="cmp-bar__hint">' + esc(i18n.cmpMin) + "</span>") +
@@ -188,6 +197,7 @@
 			return;
 		} else {
 			list.push({ id: id, title: b.getAttribute("data-title") || "", img: b.getAttribute("data-img") || "" });
+			setCmpMin(false);
 			toast(i18n.cmpAdded || "Added");
 		}
 		setCmp(list);

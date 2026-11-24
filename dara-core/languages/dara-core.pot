@@ -92,10 +92,6 @@ msgstr ""
 msgid "Currency label"
 msgstr ""
 
-#: includes/admin.php:205
-msgid "Shown after prices, e.g. SAR, EGP, AED."
-msgstr ""
-
 #: includes/admin.php:206
 msgid "Leads email"
 msgstr ""
@@ -826,4 +822,48 @@ msgstr ""
 
 #: includes/post-types.php:146
 msgid "Feature"
+msgstr ""
+
+msgid "EGP"
+msgstr ""
+
+msgid "AED"
+msgstr ""
+
+msgid "KWD"
+msgstr ""
+
+msgid "QAR"
+msgstr ""
+
+msgid "BHD"
+msgstr ""
+
+msgid "OMR"
+msgstr ""
+
+msgid "JOD"
+msgstr ""
+
+msgid "MAD"
+msgstr ""
+
+msgid "USD"
+msgstr ""
+
+msgid "EUR"
+msgstr ""
+
+msgid "GBP"
+msgstr ""
+
+msgid "Currency"
+msgstr ""
+
+msgid "Used for every price and for the price currency search engines read."
+msgstr ""
+
+msgid ""
+"Optional. Shown after prices on cards, details, compare and the mortgage "
+"calculator. Leave empty to use the short name of the currency above."
 msgstr ""

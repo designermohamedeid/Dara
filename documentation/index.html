@@ -47,7 +47,7 @@ img{max-width:100%;height:auto;border:1px solid var(--line);border-radius:10px}
 <div class="layout">
 <nav aria-label="Contents">
 	<div class="brand"><span><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10l8-6 8 6v10"/><path d="M9 20v-5a3 3 0 0 1 6 0v5"/></svg></span>Dara</div>
-	<p class="ver">Theme 1.8.2 · Dara Core 1.5.1 · Dara Pro 1.0.0<br>by <a href="https://mansourahost.com">Mansoura Host</a></p>
+	<p class="ver">Theme 1.8.3 · Dara Core 1.6.0 · Dara Pro 1.0.1<br>by <a href="https://mansourahost.com">Mansoura Host</a></p>
 	<ol>
 		<li><a href="#intro">Introduction</a></li>
 		<li><a href="#requirements">Requirements</a></li>
@@ -371,7 +371,8 @@ wp dara demo remove</code></pre>
 <h2 id="settings">Plugin settings</h2>
 <p><em>Properties → Settings</em> contains the following:</p>
 <ul>
-	<li><strong>Currency label</strong> shown after prices (for example SAR, EGP, AED).</li>
+	<li><strong>Currency</strong>: the ISO currency of your prices (SAR, EGP, AED&hellip;). Search engines read it from the property and project pages, so it must match the market you sell in.</li>
+	<li><strong>Currency label</strong> (optional) shown after prices, for example &ldquo;جنيه مصري&rdquo;. Leave it empty to use the short name of the currency.</li>
 	<li><strong>Leads email</strong>.</li>
 	<li>Office license and commercial registration numbers, shown in the footer.</li>
 	<li><strong>Default contact</strong> (name, phone and WhatsApp), used for properties without an agent.</li>
@@ -433,7 +434,7 @@ wp dara demo remove</code></pre>
 	<tr><td><code>dara_agent</code></td><td>filter</td><td><code>( $agent, $post_id )</code>. Filters the contact shown for a property.</td></tr>
 	<tr><td><code>dara_schema</code></td><td>filter</td><td><code>( $data, $post_id )</code>. Filters the JSON-LD data for properties and projects.</td></tr>
 	<tr><td><code>dara_output_schema</code></td><td>filter</td><td>Return <code>false</code> to disable the JSON-LD output (for example when an SEO plugin handles it).</td></tr>
-	<tr><td><code>dara_currency_code</code></td><td>filter</td><td>ISO currency code used in structured data. Default: <code>SAR</code>.</td></tr>
+	<tr><td><code>dara_currency_code</code></td><td>filter</td><td>ISO currency code used in structured data. Default: the <em>Currency</em> setting (<code>SAR</code> when unset).</td></tr>
 	<tr><td><code>dara_css_bundles</code></td><td>filter</td><td>The CSS bundles loaded on the current page.</td></tr>
 </table></div>
 <p>The following example sends every lead to a webhook:</p>
@@ -457,11 +458,20 @@ wp dara demo remove</code></pre>
 <h3>The home page shows my latest posts</h3>
 <p>Go to <em>Settings → Reading</em>, choose <em>A static page</em> and select <em>Home</em>. The demo importer can also do this for you.</p>
 <h3>Prices show the wrong currency</h3>
-<p>Set the currency label in <em>Properties → Settings</em>.</p>
+<p>Pick the currency in <em>Properties → Settings</em>. The label after prices, the compare table, the mortgage calculator and the price currency search engines read all follow that one setting.</p>
 <h3>Will updating the theme remove my changes?</h3>
 <p>Theme updates replace the theme files, so any edits made inside <code>dara/</code> are lost. Your content and Customizer settings are kept. Put code changes in the child theme.</p>
 
 <h2 id="changelog">Changelog</h2>
+<h3>1.8.3 (theme) / 1.6.0 (Dara Core) / 1.0.1 (Dara Pro)</h3>
+<ul>
+	<li>Currency: new <em>Currency</em> setting (ISO code). Structured data used SAR on every site; it now uses the chosen currency, and rentals add their period (monthly, yearly, daily). Sites that only had a label keep working: the code is read from it (&ldquo;جنيه&rdquo; &rarr; EGP, &ldquo;د.إ&rdquo; &rarr; AED&hellip;).</li>
+	<li>Project units on phones show as cards with the price and status up front, and every unit that is not sold has &ldquo;Ask about this model&rdquo;, which picks that model in the interest form.</li>
+	<li>Compare bar: shows only where properties can be added (not on articles or plain pages), can be minimized, and its &ldquo;2 / 4&rdquo; counter reads correctly in Arabic. On phones it no longer leaves a gap when there is no contact bar.</li>
+	<li>On a property page the bottom contact bar on phones calls the property's agent instead of the office number.</li>
+	<li>Default home texts no longer promise &ldquo;verified&rdquo; listings or &ldquo;certified&rdquo; valuations; edit them in the Customizer if your office offers that.</li>
+	<li>Fix: the footer contact column made pages scroll sideways on 320px phones.</li>
+</ul>
 <h3>1.5.1 (Dara Core)</h3>
 <ul>
 	<li>Updates: a new release shows in <em>Dashboard &rarr; Updates</em> on the next refresh (it could take up to 12 hours before). Only newer versions are offered, and old offers disappear once you install the version by hand.</li>

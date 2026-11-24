@@ -238,6 +238,16 @@
 		});
 	});
 
+	/* ---------- Project units: "Ask about this model" picks it in the form ---------- */
+	doc.addEventListener("click", function (e) {
+		var link = e.target.closest ? e.target.closest(".units__ask-link") : null;
+		var select = link && $("#lead-unit");
+		if (!select) { return; }
+		var want = link.getAttribute("data-unit");
+		$$("option", select).forEach(function (o) { if (o.value === want) { select.value = want; } });
+		setTimeout(function () { var f = $("#lead-form input[name=lead_name]"); if (f) { f.focus({ preventScroll: true }); } }, 350);
+	});
+
 	/* ---------- Gallery lightbox ---------- */
 	var gallery = [];
 	try { gallery = JSON.parse(($("#gallery-data") || {}).textContent || "[]"); } catch (err) { gallery = []; }
