@@ -150,10 +150,16 @@ function dara_customizer_map() {
 			),
 		),
 		'dara_perf'     => array(
-			__( 'Performance & maps', 'dara' ),
+			__( 'Performance, maps & interactions', 'dara' ),
 			array(
 				'perf_emoji'      => array( 'checkbox', __( 'Disable WordPress emoji script', 'dara' ) ),
 				'perf_block_css'  => array( 'checkbox', __( 'Load block CSS only on pages that use blocks', 'dara' ) ),
+				'perf_inline_css' => array( 'checkbox', __( 'Inline the theme CSS in the page head', 'dara' ), __( 'Removes the render-blocking CSS request (faster first paint on mobile). Turn off if a cache plugin already combines or inlines CSS.', 'dara' ) ),
+				'perf_webp'       => array( 'checkbox', __( 'Create WebP versions of new JPEG uploads', 'dara' ), __( 'Smaller images for new uploads (about 25–35% lighter). Existing images are not changed; regenerate thumbnails to convert them.', 'dara' ) ),
+				'perf_prefetch'   => array( 'checkbox', __( 'Load the next page when a visitor hovers a link', 'dara' ), __( 'Pages open almost instantly. Uses the browser Speculation Rules; logged-in users and forms are excluded.', 'dara' ) ),
+				'ux_motion'       => array( 'checkbox', __( 'Subtle animations (sections appear on scroll, smooth page transitions)', 'dara' ), __( 'Turned off automatically for visitors who ask their device for reduced motion.', 'dara' ) ),
+				'ux_back_to_top'  => array( 'checkbox', __( 'Show a "back to top" button on long pages', 'dara' ) ),
+				'ux_recent'       => array( 'checkbox', __( 'Show "Recently viewed" properties', 'dara' ) ),
 				'map_provider'    => array(
 					'select',
 					__( 'Map provider', 'dara' ),

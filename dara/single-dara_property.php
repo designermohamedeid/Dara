@@ -293,6 +293,7 @@ while ( have_posts() ) :
 				</div>
 			</section>
 		<?php endif; ?>
+		<?php dara_recent_section( get_the_ID() ); ?>
 	</div>
 	<?php
 endwhile;

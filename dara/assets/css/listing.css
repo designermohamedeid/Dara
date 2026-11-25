@@ -33,3 +33,4 @@
 .grid--results{grid-template-columns:repeat(auto-fill,minmax(min(100%,270px),1fr))}
 .filters-toggle{display:none}
 @media (max-width:899px){.filters-toggle{display:inline-flex}.filters{position:fixed;inset:0;z-index:90;max-width:none;background:rgba(14,26,43,.5);display:none;padding:0}.filters-open .filters{display:block}.filters__form{position:absolute;inset-block:0;inset-inline-end:0;width:min(380px,92vw);border-radius:0;overflow-y:auto}}
+.page-head:has(+ .listing){margin-bottom:32px}

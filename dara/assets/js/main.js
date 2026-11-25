@@ -371,32 +371,100 @@
 	});
 	paintFavs();
 
+	// Property cards from the REST API (favorites page, recently viewed).
+	function renderCards(ids, heading) {
+		return fetch(data.restUrl + "dara_property?per_page=50&include=" + ids.join(",") + "&_embed=wp:featuredmedia&_fields=id,link,title,meta,_links,_embedded")
+			.then(function (r) { if (!r.ok) { throw new Error(r.status); } return r.json(); })
+			.then(function (items) {
+				var esc = function (s) { var d = doc.createElement("div"); d.textContent = s || ""; return d.innerHTML; };
+				var heart = $(".fav-link svg") ? $(".fav-link svg").outerHTML : "\u2665";
+				// Keep the order of ids (most recent first).
+				items.sort(function (a, b) { return ids.indexOf(a.id) - ids.indexOf(b.id); });
+				return items.map(function (p) {
+					var media = p._embedded && p._embedded["wp:featuredmedia"] && p._embedded["wp:featuredmedia"][0];
+					var img = media && media.media_details && media.media_details.sizes ? (media.media_details.sizes["dara-card"] || media.media_details.sizes.medium_large || media.media_details.sizes.full || {}).source_url : "";
+					var price = p.meta && p.meta._dara_price ? Number(p.meta._dara_price).toLocaleString(doc.documentElement.lang) : "";
+					var title = doc.createElement("div");
+					title.innerHTML = p.title.rendered;
+					var isFav = getFavs().indexOf(p.id) > -1;
+					return '<article class="card card--property"><div class="card__media"><a href="' + esc(p.link) + '" tabindex="-1" aria-hidden="true">' +
+						(img ? '<img src="' + esc(img) + '" alt="" loading="lazy" width="640" height="480">' : "") + "</a>" +
+						'<button type="button" class="fav-btn" data-fav="' + p.id + '" aria-pressed="' + isFav + '" aria-label="' + esc(i18n.fav || "") + '">' + heart + "</button></div>" +
+						'<div class="card__body">' + (price ? '<p class="price"><span class="price__amount">' + esc(price) + "</span></p>" : "") +
+						"<" + heading + ' class="card__title"><a href="' + esc(p.link) + '">' + esc(title.textContent) + "</a></" + heading + "></div></article>";
+				}).join("");
+			});
+	}
+
 	var favWrap = $("[data-favorites]");
 	if (favWrap) {
 		var favs = getFavs();
 		if (!favs.length) {
 			favWrap.innerHTML = '<p class="empty">' + (i18n.empty || "") + "</p>";
 		} else {
-			fetch(data.restUrl + "dara_property?per_page=50&include=" + favs.join(",") + "&_embed=wp:featuredmedia&_fields=id,link,title,meta,_links,_embedded")
-				.then(function (r) { return r.json(); })
-				.then(function (items) {
-					var esc = function (s) { var d = doc.createElement("div"); d.textContent = s || ""; return d.innerHTML; };
-					favWrap.innerHTML = items.map(function (p) {
-						var media = p._embedded && p._embedded["wp:featuredmedia"] && p._embedded["wp:featuredmedia"][0];
-						var img = media && media.media_details && media.media_details.sizes ? (media.media_details.sizes["dara-card"] || media.media_details.sizes.medium_large || media.media_details.sizes.full || {}).source_url : "";
-						var price = p.meta && p.meta._dara_price ? Number(p.meta._dara_price).toLocaleString(doc.documentElement.lang) : "";
-						var title = doc.createElement("div");
-						title.innerHTML = p.title.rendered;
-						return '<article class="card card--property"><div class="card__media"><a href="' + esc(p.link) + '">' +
-							(img ? '<img src="' + esc(img) + '" alt="" loading="lazy">' : "") + "</a>" +
-							'<button type="button" class="fav-btn" data-fav="' + p.id + '" aria-pressed="true">' + ($(".fav-link svg") ? $(".fav-link svg").outerHTML : "♥") + "</button></div>" +
-							'<div class="card__body">' + (price ? '<p class="price"><span class="price__amount">' + esc(price) + "</span></p>" : "") +
-							'<h2 class="card__title"><a href="' + esc(p.link) + '">' + esc(title.textContent) + "</a></h2></div></article>";
-					}).join("");
-				})
-				.catch(function () { favWrap.innerHTML = ""; });
+			renderCards(favs, "h2").then(function (html) { favWrap.innerHTML = html; }).catch(function () { favWrap.innerHTML = ""; });
 		}
 	}
+
+	/* ---------- Recently viewed (localStorage, newest first, max 8) ---------- */
+	var RECENT_KEY = "dara_recent";
+	var recentBox = $("[data-recent]");
+	if (recentBox) {
+		var recent = [];
+		try { recent = JSON.parse(localStorage.getItem(RECENT_KEY) || "[]").map(Number).filter(Boolean); } catch (err) { recent = []; }
+		var current = Number(recentBox.getAttribute("data-recent"));
+		var show = recent.filter(function (id) { return id !== current; }).slice(0, 4);
+		if (current) {
+			recent = [current].concat(recent.filter(function (id) { return id !== current; })).slice(0, 8);
+			try { localStorage.setItem(RECENT_KEY, JSON.stringify(recent)); } catch (err) { /* private mode */ }
+		}
+		if (show.length) {
+			// Fetch only when the strip is about to scroll into view.
+			var loadRecent = function () {
+				renderCards(show, "h3").then(function (html) {
+					if (!html) { return; }
+					$("[data-recent-list]", recentBox).innerHTML = html;
+					recentBox.hidden = false;
+				}).catch(function () {});
+			};
+			if ("IntersectionObserver" in window) {
+				recentBox.hidden = false;
+				recentBox.classList.add("is-pending");
+				var ro = new IntersectionObserver(function (en) {
+					if (en[0].isIntersecting) { ro.disconnect(); recentBox.classList.remove("is-pending"); loadRecent(); }
+				}, { rootMargin: "400px 0px" });
+				ro.observe(recentBox);
+			} else {
+				loadRecent();
+			}
+		}
+	}
+
+	/* ---------- Back to top ---------- */
+	if (data.backToTop) {
+		var topBtn = doc.createElement("button");
+		topBtn.type = "button";
+		topBtn.className = "to-top";
+		topBtn.hidden = true;
+		topBtn.setAttribute("aria-label", i18n.toTop || "Back to top");
+		topBtn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>';
+		doc.body.appendChild(topBtn);
+		var topTick = false;
+		window.addEventListener("scroll", function () {
+			if (topTick) { return; }
+			topTick = true;
+			requestAnimationFrame(function () {
+				topBtn.hidden = window.scrollY < window.innerHeight * 2;
+				topTick = false;
+			});
+		}, { passive: true });
+		topBtn.addEventListener("click", function () {
+			window.scrollTo({ top: 0, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+			var skip = $("#site-header a, #site-header button");
+			if (skip) { skip.focus({ preventScroll: true }); }
+		});
+	}
+
 	/* ---------- Shared helpers for the Dara Pro plugin ---------- */
 	Dara.toast = toast;
 	Dara.$ = $;

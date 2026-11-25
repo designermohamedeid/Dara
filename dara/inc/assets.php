@@ -16,12 +16,29 @@ defined( 'ABSPATH' ) || exit;
 function dara_assets() {
 	$min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
-	// Core styles + only the bundle the current template needs.
-	wp_enqueue_style( 'dara', dara_asset_url( "assets/css/core{$min}.css" ), array(), dara_asset_ver( "assets/css/core{$min}.css" ) );
-	foreach ( dara_page_bundles() as $bundle ) {
-		wp_enqueue_style( 'dara-' . $bundle, dara_asset_url( "assets/css/{$bundle}{$min}.css" ), array( 'dara' ), dara_asset_ver( "assets/css/{$bundle}{$min}.css" ) );
+	// Core styles + only the bundle the current template needs. By default they
+	// are inlined in <head> (about 9 KB gzipped): no render-blocking CSS request,
+	// which is the biggest LCP cost on mobile. The 'dara' handle stays registered
+	// either way so child themes can depend on it.
+	if ( dara_inline_css() ) {
+		wp_register_style( 'dara', false, array(), DARA_VERSION );
+		wp_enqueue_style( 'dara' );
+		$css = dara_css_file( "assets/css/core{$min}.css" );
+		foreach ( dara_page_bundles() as $bundle ) {
+			$css .= "\n" . dara_css_file( "assets/css/{$bundle}{$min}.css" );
+		}
+		wp_add_inline_style( 'dara', $css );
+	} else {
+		wp_enqueue_style( 'dara', dara_asset_url( "assets/css/core{$min}.css" ), array(), dara_asset_ver( "assets/css/core{$min}.css" ) );
+		foreach ( dara_page_bundles() as $bundle ) {
+			wp_enqueue_style( 'dara-' . $bundle, dara_asset_url( "assets/css/{$bundle}{$min}.css" ), array( 'dara' ), dara_asset_ver( "assets/css/{$bundle}{$min}.css" ) );
+		}
 	}
 	wp_add_inline_style( 'dara', dara_css_vars() );
+	if ( dara_mod( 'ux_motion' ) ) {
+		// Smooth cross-fade between pages (Chrome/Edge/Safari 18+); the header stays put.
+		wp_add_inline_style( 'dara', '@media (prefers-reduced-motion:no-preference){@view-transition{navigation:auto}.site-header{view-transition-name:dara-header}::view-transition-group(root){animation-duration:.2s}}' );
+	}
 
 	wp_enqueue_script(
 		'dara',
@@ -52,6 +69,7 @@ function dara_assets() {
 			'attribution' => wp_kses_post( dara_mod( 'map_attribution' ) ),
 			'restUrl'     => esc_url_raw( rest_url( 'wp/v2/' ) ),
 			'compareUrl'  => dara_compare_url(),
+			'backToTop'   => (bool) dara_mod( 'ux_back_to_top' ),
 			'i18n'        => array(
 				'saved'      => __( 'Saved to favorites', 'dara' ),
 				'removed'    => __( 'Removed from favorites', 'dara' ),
@@ -70,6 +88,8 @@ function dara_assets() {
 				'cmpShow'    => __( 'Show compare list', 'dara' ),
 				'cmpHide'    => __( 'Minimize compare list', 'dara' ),
 				'remove'     => __( 'Remove', 'dara' ),
+				'fav'        => __( 'Save to favorites', 'dara' ),
+				'toTop'      => __( 'Back to top', 'dara' ),
 			),
 		)
 	);
@@ -114,6 +134,31 @@ function dara_page_bundles() {
 		$bundles[] = 'content';
 	}
 	return apply_filters( 'dara_css_bundles', array_unique( $bundles ) );
+}
+
+/**
+ * Inline the theme CSS in <head>? (Customize > Dara theme > Performance.)
+ *
+ * @return bool
+ */
+function dara_inline_css() {
+	return (bool) apply_filters( 'dara_inline_css', dara_mod( 'perf_inline_css' ) && ! is_customize_preview() );
+}
+
+/**
+ * CSS file contents with url() paths made absolute, for inlining.
+ *
+ * @param string $path Relative path.
+ * @return string
+ */
+function dara_css_file( $path ) {
+	$file = DARA_DIR . '/' . $path;
+	if ( ! file_exists( $file ) ) {
+		$file = str_replace( '.min.', '.', $file );
+	}
+	$css = file_exists( $file ) ? (string) file_get_contents( $file ) : ''; // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- local theme file.
+	$css = str_replace( array( "url('../", 'url("../', 'url(../' ), array( "url('" . DARA_URI . '/assets/', 'url("' . DARA_URI . '/assets/', 'url(' . DARA_URI . '/assets/' ), $css );
+	return wp_strip_all_tags( $css );
 }
 
 /**

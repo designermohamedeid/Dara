@@ -29,7 +29,7 @@ $dara_points = array();
 				?>
 			</p>
 			<div class="results-bar__tools">
-				<button type="button" class="btn btn--outline btn--sm filters-toggle" aria-controls="filters" aria-expanded="false"><?php dara_the_icon( 'filter', 18 ); ?><?php esc_html_e( 'Filters', 'dara' ); ?></button>
+				<button type="button" class="btn btn--outline btn--sm filters-toggle" aria-controls="filters" aria-expanded="false"><?php dara_the_icon( 'filter', 18 ); ?><?php esc_html_e( 'Filters', 'dara' ); ?><?php $dara_fc = dara_filter_count(); ?><?php if ( $dara_fc ) : ?><span class="badge-count" aria-label="<?php echo esc_attr( sprintf( /* translators: %d: number of active filters. */ _n( '%d active filter', '%d active filters', $dara_fc, 'dara' ), $dara_fc ) ); ?>"><?php echo esc_html( number_format_i18n( $dara_fc ) ); ?></span><?php endif; ?></button>
 				<form method="get" class="sort" data-autosubmit>
 					<?php
 					foreach ( $dara_f as $dara_k => $dara_v ) {
@@ -57,6 +57,8 @@ $dara_points = array();
 				</div>
 			</div>
 		</div>
+
+		<?php dara_filter_chips(); ?>
 
 		<?php if ( have_posts() ) : ?>
 			<div class="map map--listing" id="listing-map" hidden data-map="listing"></div>
@@ -98,6 +100,7 @@ $dara_points = array();
 				<a class="btn btn--primary" href="<?php echo esc_url( dara_listings_url() ); ?>"><?php esc_html_e( 'See all properties', 'dara' ); ?></a>
 			</div>
 		<?php endif; ?>
+		<?php dara_recent_section(); ?>
 	</div>
 </div>
 <?php
