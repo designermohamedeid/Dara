@@ -836,8 +836,6 @@ body.has-cmp-bar--min{padding-bottom:60px}
 body.has-cmp-bar .to-top{bottom:110px}
 @media (max-width:767px){body:has(.mobile-bar) .to-top{bottom:calc(84px + env(safe-area-inset-bottom))}body:has(.mobile-bar).has-cmp-bar .to-top{bottom:calc(190px + env(safe-area-inset-bottom))}}
 @media print{.to-top,.filter-chips,.recent{display:none!important}}
-/* Below-the-fold footer: skip its layout/paint until needed */
-.site-footer{content-visibility:auto;contain-intrinsic-size:auto 640px}
 /* Motion: sections rise in as they scroll into view (CSS scroll-driven, no JS) */
 @keyframes dara-rise{from{opacity:0;transform:translateY(28px)}}
 @media (prefers-reduced-motion:no-preference){

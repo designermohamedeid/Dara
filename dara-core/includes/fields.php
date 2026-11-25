@@ -399,3 +399,38 @@ function dara_core_type_icon_save( $term_id ) {
 }
 add_action( 'created_property_type', 'dara_core_type_icon_save' );
 add_action( 'edited_property_type', 'dara_core_type_icon_save' );
+
+/**
+ * Public, read-only card data in the REST API (favorites, recently viewed).
+ * Meta is not exposed to guests through `meta` (the post type has no
+ * custom-fields support), so the card fields get their own small object.
+ */
+function dara_core_rest_card_field() {
+	register_rest_field(
+		'dara_property',
+		'dara_card',
+		array(
+			'schema'       => array(
+				'type'     => 'object',
+				'context'  => array( 'view' ),
+				'readonly' => true,
+			),
+			'get_callback' => function ( $post ) {
+				$id     = (int) $post['id'];
+				$price  = dara_price_parts( $id );
+				$cities = get_the_terms( $id, 'property_city' );
+				return array(
+					'price'   => $price['amount'],
+					'unit'    => $price['unit'],
+					'purpose' => (string) get_post_meta( $id, '_dara_purpose', true ),
+					'label'   => get_post_meta( $id, '_dara_purpose', true ) ? dara_purpose_label( get_post_meta( $id, '_dara_purpose', true ) ) : '',
+					'city'    => $cities && ! is_wp_error( $cities ) ? $cities[0]->name : '',
+					'beds'    => (string) get_post_meta( $id, '_dara_beds', true ),
+					'baths'   => (string) get_post_meta( $id, '_dara_baths', true ),
+					'area'    => (string) get_post_meta( $id, '_dara_area', true ),
+				);
+			},
+		)
+	);
+}
+add_action( 'rest_api_init', 'dara_core_rest_card_field' );

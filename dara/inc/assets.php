@@ -70,6 +70,13 @@ function dara_assets() {
 			'restUrl'     => esc_url_raw( rest_url( 'wp/v2/' ) ),
 			'compareUrl'  => dara_compare_url(),
 			'backToTop'   => (bool) dara_mod( 'ux_back_to_top' ),
+			'icons'       => array(
+				'pin'   => dara_icon( 'pin', 16 ),
+				'bed'   => dara_icon( 'bed', 18 ),
+				'bath'  => dara_icon( 'bath', 18 ),
+				'area'  => dara_icon( 'area', 18 ),
+				'heart' => dara_icon( 'heart', 20 ),
+			),
 			'i18n'        => array(
 				'saved'      => __( 'Saved to favorites', 'dara' ),
 				'removed'    => __( 'Removed from favorites', 'dara' ),
@@ -90,6 +97,7 @@ function dara_assets() {
 				'remove'     => __( 'Remove', 'dara' ),
 				'fav'        => __( 'Save to favorites', 'dara' ),
 				'toTop'      => __( 'Back to top', 'dara' ),
+				'sqm'        => __( 'm²', 'dara' ),
 			),
 		)
 	);

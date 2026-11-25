@@ -1,7 +1,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Dara 1.8.0\n"
+"Project-Id-Version: Dara 1.9.0\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1495,3 +1495,103 @@ msgstr "إظهار قائمة المقارنة"
 
 msgid "Minimize compare list"
 msgstr "تصغير قائمة المقارنة"
+
+#. translators: %d: number of active filters.
+msgid "%d active filter"
+msgid_plural "%d active filters"
+msgstr[0] "لا توجد فلاتر مفعّلة"
+msgstr[1] "فلتر واحد مفعّل"
+msgstr[2] "فلتران مفعّلان"
+msgstr[3] "%d فلاتر مفعّلة"
+msgstr[4] "%d فلترًا مفعّلًا"
+msgstr[5] "%d فلتر مفعّل"
+
+msgid "Save to favorites"
+msgstr "حفظ في المفضلة"
+
+msgid "Back to top"
+msgstr "العودة للأعلى"
+
+msgid "Performance, maps & interactions"
+msgstr "الأداء والخرائط والتفاعل"
+
+msgid "Inline the theme CSS in the page head"
+msgstr "تضمين CSS القالب داخل رأس الصفحة"
+
+msgid ""
+"Removes the render-blocking CSS request (faster first paint on mobile). Turn"
+" off if a cache plugin already combines or inlines CSS."
+msgstr ""
+"يلغي طلب CSS الذي يؤخر عرض الصفحة (ظهور أسرع على الجوال). أوقفه إذا كانت "
+"إضافة التخزين المؤقت تدمج ملفات CSS أو تضمّنها بالفعل."
+
+msgid "Create WebP versions of new JPEG uploads"
+msgstr "إنشاء نسخ WebP لصور JPEG الجديدة"
+
+msgid ""
+"Smaller images for new uploads (about 25–35% lighter). Existing images are "
+"not changed; regenerate thumbnails to convert them."
+msgstr ""
+"صور أخف للرفع الجديد (أصغر بنحو 25–35%). الصور الحالية لا تتغير؛ أعد توليد "
+"المصغرات لتحويلها."
+
+msgid "Load the next page when a visitor hovers a link"
+msgstr "تحميل الصفحة التالية عند مرور الزائر فوق الرابط"
+
+msgid ""
+"Pages open almost instantly. Uses the browser Speculation Rules; logged-in "
+"users and forms are excluded."
+msgstr ""
+"تفتح الصفحات بشكل شبه فوري. يعتمد على Speculation Rules في المتصفح، ولا يعمل"
+" للمستخدمين المسجلين ولا للنماذج."
+
+msgid "Subtle animations (sections appear on scroll, smooth page transitions)"
+msgstr "حركة خفيفة (ظهور الأقسام مع التمرير وانتقال ناعم بين الصفحات)"
+
+msgid ""
+"Turned off automatically for visitors who ask their device for reduced "
+"motion."
+msgstr "تتوقف تلقائيًا للزوار الذين فعّلوا تقليل الحركة في أجهزتهم."
+
+msgid "Show a \"back to top\" button on long pages"
+msgstr "إظهار زر «العودة للأعلى» في الصفحات الطويلة"
+
+msgid "Show \"Recently viewed\" properties"
+msgstr "إظهار قسم «شاهدتها مؤخرًا»"
+
+#. translators: %s: value.
+msgid "From %s"
+msgstr "من %s"
+
+#. translators: %s: value.
+msgid "Up to %s"
+msgstr "حتى %s"
+
+#. translators: %s: number of bedrooms.
+msgid "%s+ bedrooms"
+msgstr "%s+ غرف نوم"
+
+#. translators: %s: number of bathrooms.
+msgid "%s+ bathrooms"
+msgstr "%s+ دورات مياه"
+
+msgid "Active filters"
+msgstr "الفلاتر المفعّلة"
+
+msgid "Remove filter"
+msgstr "إزالة الفلتر"
+
+msgid "Recently viewed"
+msgstr "شاهدتها مؤخرًا"
+
+#. Template Name of the theme
+msgid "Contact"
+msgstr "تواصل معنا"
+
+#. Template Name of the theme
+msgid "Developers"
+msgstr "المطورون"
+
+#. Template Name of the theme
+msgid "Full width (no title)"
+msgstr "عرض كامل (بدون عنوان)"

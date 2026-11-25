@@ -373,25 +373,32 @@
 
 	// Property cards from the REST API (favorites page, recently viewed).
 	function renderCards(ids, heading) {
-		return fetch(data.restUrl + "dara_property?per_page=50&include=" + ids.join(",") + "&_embed=wp:featuredmedia&_fields=id,link,title,meta,_links,_embedded")
+		return fetch(data.restUrl + "dara_property?per_page=50&include=" + ids.join(",") + "&_embed=wp:featuredmedia&_fields=id,link,title,dara_card,_links,_embedded")
 			.then(function (r) { if (!r.ok) { throw new Error(r.status); } return r.json(); })
 			.then(function (items) {
 				var esc = function (s) { var d = doc.createElement("div"); d.textContent = s || ""; return d.innerHTML; };
-				var heart = $(".fav-link svg") ? $(".fav-link svg").outerHTML : "\u2665";
+				var ic = data.icons || {};
+				var favs = getFavs();
 				// Keep the order of ids (most recent first).
 				items.sort(function (a, b) { return ids.indexOf(a.id) - ids.indexOf(b.id); });
 				return items.map(function (p) {
 					var media = p._embedded && p._embedded["wp:featuredmedia"] && p._embedded["wp:featuredmedia"][0];
 					var img = media && media.media_details && media.media_details.sizes ? (media.media_details.sizes["dara-card"] || media.media_details.sizes.medium_large || media.media_details.sizes.full || {}).source_url : "";
-					var price = p.meta && p.meta._dara_price ? Number(p.meta._dara_price).toLocaleString(doc.documentElement.lang) : "";
+					var c = p.dara_card || {};
 					var title = doc.createElement("div");
 					title.innerHTML = p.title.rendered;
-					var isFav = getFavs().indexOf(p.id) > -1;
+					var name = title.textContent;
+					var specs = [["bed", c.beds, ""], ["bath", c.baths, ""], ["area", c.area, " " + (i18n.sqm || "")]].filter(function (m) { return m[1]; }).map(function (m) {
+						return "<li>" + (ic[m[0]] || "") + esc(Number(m[1]).toLocaleString(doc.documentElement.lang) + m[2]) + "</li>";
+					}).join("");
 					return '<article class="card card--property"><div class="card__media"><a href="' + esc(p.link) + '" tabindex="-1" aria-hidden="true">' +
-						(img ? '<img src="' + esc(img) + '" alt="" loading="lazy" width="640" height="480">' : "") + "</a>" +
-						'<button type="button" class="fav-btn" data-fav="' + p.id + '" aria-pressed="' + isFav + '" aria-label="' + esc(i18n.fav || "") + '">' + heart + "</button></div>" +
-						'<div class="card__body">' + (price ? '<p class="price"><span class="price__amount">' + esc(price) + "</span></p>" : "") +
-						"<" + heading + ' class="card__title"><a href="' + esc(p.link) + '">' + esc(title.textContent) + "</a></" + heading + "></div></article>";
+						(img ? '<img src="' + esc(img) + '" alt="' + esc(name) + '" loading="lazy" width="640" height="480">' : "") + "</a>" +
+						(c.label ? '<div class="card__badges"><span class="badge badge--' + (c.purpose === "rent" ? "dark" : "primary") + '">' + esc(c.label) + "</span></div>" : "") +
+						'<button type="button" class="fav-btn" data-fav="' + p.id + '" aria-pressed="' + (favs.indexOf(p.id) > -1) + '" aria-label="' + esc(i18n.fav || "") + '">' + (ic.heart || "\u2665") + "</button></div>" +
+						'<div class="card__body">' + (c.price ? '<p class="price"><span class="price__amount">' + esc(c.price) + '</span> <span class="price__unit">' + esc(c.unit) + "</span></p>" : "") +
+						"<" + heading + ' class="card__title"><a href="' + esc(p.link) + '">' + esc(name) + "</a></" + heading + ">" +
+						(c.city ? '<p class="card__loc">' + (ic.pin || "") + esc(c.city) + "</p>" : "") +
+						(specs ? '<ul class="card__meta">' + specs + "</ul>" : "") + "</div></article>";
 				}).join("");
 			});
 	}

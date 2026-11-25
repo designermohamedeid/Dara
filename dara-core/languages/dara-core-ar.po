@@ -1,7 +1,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Dara Core 1.5.0\n"
+"Project-Id-Version: Dara Core 1.7.0\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -894,3 +894,12 @@ msgid ""
 msgstr ""
 "اختياري. يظهر بعد الأسعار في البطاقات والتفاصيل والمقارنة وحاسبة التمويل. "
 "اتركه فارغًا لاستخدام الاسم المختصر للعملة المختارة."
+
+msgid "Property price"
+msgstr "سعر العقار"
+
+msgid "For sale / for rent"
+msgstr "للبيع / للإيجار"
+
+msgid "Property city / district"
+msgstr "مدينة / حي العقار"

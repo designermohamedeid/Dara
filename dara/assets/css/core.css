@@ -327,6 +327,5 @@ body.has-cmp-bar--min{padding-bottom:60px}
 body.has-cmp-bar .to-top{bottom:110px}
 @media (max-width:767px){body:has(.mobile-bar) .to-top{bottom:calc(84px + env(safe-area-inset-bottom))}body:has(.mobile-bar).has-cmp-bar .to-top{bottom:calc(190px + env(safe-area-inset-bottom))}}
 @media print{.to-top,.filter-chips,.recent{display:none!important}}
-.site-footer{content-visibility:auto;contain-intrinsic-size:auto 640px}
 @keyframes dara-rise{from{opacity:0;transform:translateY(28px)}}
 @media (prefers-reduced-motion:no-preference){@supports (animation-timeline:view()){.dara-motion :is(.grid--cards>.card,.grid>.card,.section-head,.tile,.service,.why__media,.sp-section,.pj-section,.timeline li,.recent .card){animation:dara-rise linear both;animation-timeline:view();animation-range:entry 0% entry 35%}}}
