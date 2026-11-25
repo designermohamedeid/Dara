@@ -2,12 +2,13 @@
 /**
  * Dara theme.
  *
+ * @version 1.9.0
  * @package Dara
  */
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'DARA_VERSION', '1.4.1' );
+define( 'DARA_VERSION', '1.9.0' );
 define( 'DARA_DIR', get_template_directory() );
 define( 'DARA_URI', get_template_directory_uri() );
 
@@ -17,5 +18,6 @@ require DARA_DIR . '/inc/template-tags.php';
 require DARA_DIR . '/inc/customizer.php';
 require DARA_DIR . '/inc/assets.php';
 require DARA_DIR . '/inc/performance.php';
+require DARA_DIR . '/inc/seo.php';
 require DARA_DIR . '/inc/menus.php';
 require DARA_DIR . '/inc/plugin-installer.php';

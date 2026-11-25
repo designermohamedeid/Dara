@@ -1,11 +1,39 @@
-#
+# Copyright (C) 2026 Mansoura Host
+# This file is distributed under the GPL-2.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dara Core 1.5.0\n"
+"Project-Id-Version: Dara Core 1.6.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/dara-core\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-11-25T02:37:27+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: dara-core\n"
+
+#. Plugin Name of the plugin
+#: dara-core.php
+msgid "Dara Core"
+msgstr ""
+
+#. Plugin URI of the plugin
+#. Author URI of the plugin
+#: dara-core.php
+msgid "https://mansourahost.com"
+msgstr ""
+
+#. Description of the plugin
+#: dara-core.php
+msgid "Real estate engine for the Dara theme: properties, developer projects, agents, advanced search, leads (viewing requests, project interest, contact, list-your-property) and structured data."
+msgstr ""
+
+#. Author of the plugin
+#: dara-core.php
+msgid "Mansoura Host"
+msgstr ""
 
 #: includes/admin.php:29
 msgid "Select images"
@@ -15,7 +43,9 @@ msgstr ""
 msgid "Use these images"
 msgstr ""
 
-#: includes/admin.php:31 includes/developers.php:58 includes/fields.php:280
+#: includes/admin.php:31
+#: includes/developers.php:58
+#: includes/fields.php:280
 msgid "Remove"
 msgstr ""
 
@@ -23,11 +53,14 @@ msgstr ""
 msgid "Image"
 msgstr ""
 
-#: includes/admin.php:51 includes/fields.php:36
+#: includes/admin.php:51
+#: includes/fields.php:36
 msgid "Price"
 msgstr ""
 
-#: includes/admin.php:52 includes/fields.php:30 includes/leads.php:114
+#: includes/admin.php:52
+#: includes/fields.php:30
+#: includes/leads.php:114
 msgid "Purpose"
 msgstr ""
 
@@ -35,15 +68,20 @@ msgstr ""
 msgid "Featured"
 msgstr ""
 
-#: includes/admin.php:92 includes/post-types.php:96
+#: includes/admin.php:92
+#: includes/post-types.php:96
 msgid "Lead"
 msgstr ""
 
-#: includes/admin.php:93 includes/admin.php:137 includes/helpers.php:158
+#: includes/admin.php:93
+#: includes/admin.php:137
+#: includes/helpers.php:238
 msgid "Type"
 msgstr ""
 
-#: includes/admin.php:94 includes/admin.php:139 includes/developers.php:39
+#: includes/admin.php:94
+#: includes/admin.php:139
+#: includes/developers.php:39
 #: includes/fields.php:141
 msgid "Phone"
 msgstr ""
@@ -60,7 +98,9 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: includes/admin.php:140 includes/developers.php:40 includes/fields.php:143
+#: includes/admin.php:140
+#: includes/developers.php:40
+#: includes/fields.php:143
 msgid "Email"
 msgstr ""
 
@@ -80,7 +120,8 @@ msgstr ""
 msgid "Page"
 msgstr ""
 
-#: includes/admin.php:169 includes/admin.php:213
+#: includes/admin.php:169
+#: includes/admin.php:215
 msgid "Dara settings"
 msgstr ""
 
@@ -88,44 +129,56 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: includes/admin.php:205
+#: includes/admin.php:207
 msgid "Currency label"
 msgstr ""
 
-#: includes/admin.php:206
-msgid "Leads email"
-msgstr ""
-
-#: includes/admin.php:206
-msgid "Viewing requests and forms are sent here (and to the property agent)."
-msgstr ""
-
 #: includes/admin.php:207
-msgid "Office FAL license"
+msgid "Optional. Shown after prices on cards, details, compare and the mortgage calculator. Leave empty to use the short name of the currency above."
 msgstr ""
 
 #: includes/admin.php:208
-msgid "Commercial registration"
+msgid "Leads email"
+msgstr ""
+
+#: includes/admin.php:208
+msgid "Viewing requests and forms are sent here (and to the property agent)."
 msgstr ""
 
 #: includes/admin.php:209
-msgid "Default contact name"
-msgstr ""
-
-#: includes/admin.php:209
-msgid "Used when a property has no agent."
+msgid "Office FAL license"
 msgstr ""
 
 #: includes/admin.php:210
+msgid "Commercial registration"
+msgstr ""
+
+#: includes/admin.php:211
+msgid "Default contact name"
+msgstr ""
+
+#: includes/admin.php:211
+msgid "Used when a property has no agent."
+msgstr ""
+
+#: includes/admin.php:212
 msgid "Default contact phone"
 msgstr ""
 
-#: includes/admin.php:211
+#: includes/admin.php:213
 msgid "Default WhatsApp number"
 msgstr ""
 
-#: includes/admin.php:211
+#: includes/admin.php:213
 msgid "International format without +"
+msgstr ""
+
+#: includes/admin.php:220
+msgid "Currency"
+msgstr ""
+
+#: includes/admin.php:224
+msgid "Used for every price and for the price currency search engines read."
 msgstr ""
 
 #: includes/developers.php:18
@@ -136,7 +189,8 @@ msgstr ""
 msgid "Developer"
 msgstr ""
 
-#: includes/developers.php:36 includes/developers.php:138
+#: includes/developers.php:36
+#: includes/developers.php:138
 msgid "Logo"
 msgstr ""
 
@@ -156,11 +210,15 @@ msgstr ""
 msgid "Property details"
 msgstr ""
 
-#: includes/fields.php:32 includes/helpers.php:48
+#: includes/fields.php:32
+#: includes/helpers.php:128
+#: includes/schema.php:197
 msgid "For sale"
 msgstr ""
 
-#: includes/fields.php:33 includes/helpers.php:48
+#: includes/fields.php:33
+#: includes/helpers.php:128
+#: includes/schema.php:197
 msgid "For rent"
 msgstr ""
 
@@ -185,14 +243,18 @@ msgid "Daily"
 msgstr ""
 
 #: includes/fields.php:47
+#: includes/schema.php:215
 msgid "Area (m²)"
 msgstr ""
 
-#: includes/fields.php:48 includes/helpers.php:162
+#: includes/fields.php:48
+#: includes/helpers.php:242
+#: includes/schema.php:222
 msgid "Bedrooms"
 msgstr ""
 
-#: includes/fields.php:49 includes/helpers.php:163
+#: includes/fields.php:49
+#: includes/helpers.php:243
 msgid "Bathrooms"
 msgstr ""
 
@@ -204,7 +266,8 @@ msgstr ""
 msgid "e.g. New, 5 years"
 msgstr ""
 
-#: includes/fields.php:53 includes/helpers.php:173
+#: includes/fields.php:53
+#: includes/helpers.php:253
 msgid "Facing"
 msgstr ""
 
@@ -228,7 +291,8 @@ msgstr ""
 msgid "Corner"
 msgstr ""
 
-#: includes/fields.php:65 includes/helpers.php:174
+#: includes/fields.php:65
+#: includes/helpers.php:254
 msgid "Condition"
 msgstr ""
 
@@ -236,7 +300,8 @@ msgstr ""
 msgid "Ready to move"
 msgstr ""
 
-#: includes/fields.php:69 includes/fields.php:110
+#: includes/fields.php:69
+#: includes/fields.php:110
 msgid "Under construction"
 msgstr ""
 
@@ -248,7 +313,8 @@ msgstr ""
 msgid "Featured property"
 msgstr ""
 
-#: includes/fields.php:74 includes/post-types.php:80
+#: includes/fields.php:74
+#: includes/post-types.php:80
 msgid "Agent"
 msgstr ""
 
@@ -256,7 +322,8 @@ msgstr ""
 msgid "Gallery, floor plans & video"
 msgstr ""
 
-#: includes/fields.php:80 includes/fields.php:133
+#: includes/fields.php:80
+#: includes/fields.php:133
 msgid "Photo gallery"
 msgstr ""
 
@@ -276,11 +343,13 @@ msgstr ""
 msgid "Location"
 msgstr ""
 
-#: includes/fields.php:88 includes/fields.php:121
+#: includes/fields.php:88
+#: includes/fields.php:121
 msgid "Address"
 msgstr ""
 
-#: includes/fields.php:89 includes/fields.php:122
+#: includes/fields.php:89
+#: includes/fields.php:122
 msgid "Latitude"
 msgstr ""
 
@@ -288,7 +357,8 @@ msgstr ""
 msgid "Right-click the location in Google Maps to copy the coordinates."
 msgstr ""
 
-#: includes/fields.php:90 includes/fields.php:123
+#: includes/fields.php:90
+#: includes/fields.php:123
 msgid "Longitude"
 msgstr ""
 
@@ -325,7 +395,6 @@ msgid "Ready"
 msgstr ""
 
 #: includes/fields.php:114
-#, php-format
 msgid "Completion (%)"
 msgstr ""
 
@@ -374,9 +443,7 @@ msgid "Units table"
 msgstr ""
 
 #: includes/fields.php:130
-msgid ""
-"One per line: Model | Type | Area | Bedrooms | Price | "
-"available/reserved/sold"
+msgid "One per line: Model | Type | Area | Bedrooms | Price | available/reserved/sold"
 msgstr ""
 
 #: includes/fields.php:131
@@ -443,63 +510,109 @@ msgstr ""
 msgid "Rest house"
 msgstr ""
 
-#: includes/fields.php:363 includes/fields.php:378
+#: includes/fields.php:363
+#: includes/fields.php:378
 msgid "Icon"
 msgstr ""
 
-#: includes/helpers.php:18
+#: includes/helpers.php:43
 msgid "SAR"
 msgstr ""
 
-#: includes/helpers.php:62
+#: includes/helpers.php:44
+msgid "EGP"
+msgstr ""
+
+#: includes/helpers.php:45
+msgid "AED"
+msgstr ""
+
+#: includes/helpers.php:46
+msgid "KWD"
+msgstr ""
+
+#: includes/helpers.php:47
+msgid "QAR"
+msgstr ""
+
+#: includes/helpers.php:48
+msgid "BHD"
+msgstr ""
+
+#: includes/helpers.php:49
+msgid "OMR"
+msgstr ""
+
+#: includes/helpers.php:50
+msgid "JOD"
+msgstr ""
+
+#: includes/helpers.php:51
+msgid "MAD"
+msgstr ""
+
+#: includes/helpers.php:52
+msgid "USD"
+msgstr ""
+
+#: includes/helpers.php:53
+msgid "EUR"
+msgstr ""
+
+#: includes/helpers.php:54
+msgid "GBP"
+msgstr ""
+
+#: includes/helpers.php:142
 msgid "Price on request"
 msgstr ""
 
-#: includes/helpers.php:70
+#: includes/helpers.php:150
 msgid "yearly"
 msgstr ""
 
-#: includes/helpers.php:71
+#: includes/helpers.php:151
 msgid "monthly"
 msgstr ""
 
-#: includes/helpers.php:72
+#: includes/helpers.php:152
 msgid "daily"
 msgstr ""
 
-#: includes/helpers.php:161
+#: includes/helpers.php:241
 msgid "Area"
 msgstr ""
 
-#: includes/helpers.php:161
+#: includes/helpers.php:241
+#: includes/schema.php:218
 msgid "m²"
 msgstr ""
 
-#: includes/helpers.php:164
+#: includes/helpers.php:244
 msgid "Age"
 msgstr ""
 
-#: includes/helpers.php:222
+#: includes/helpers.php:302
 msgid "Sales team"
 msgstr ""
 
-#: includes/helpers.php:257
+#: includes/helpers.php:337
 msgid "Viewing request"
 msgstr ""
 
-#: includes/helpers.php:258
+#: includes/helpers.php:338
 msgid "Project interest"
 msgstr ""
 
-#: includes/helpers.php:259
+#: includes/helpers.php:339
 msgid "List a property"
 msgstr ""
 
-#: includes/helpers.php:260
+#: includes/helpers.php:340
 msgid "Contact"
 msgstr ""
 
-#: includes/helpers.php:261
+#: includes/helpers.php:341
 msgid "Newsletter"
 msgstr ""
 
@@ -520,6 +633,7 @@ msgid "City"
 msgstr ""
 
 #: includes/leads.php:113
+#: includes/schema.php:208
 msgid "Property type"
 msgstr ""
 
@@ -547,7 +661,8 @@ msgstr ""
 msgid "License error."
 msgstr ""
 
-#: includes/license.php:279 includes/license.php:315
+#: includes/license.php:279
+#: includes/license.php:315
 msgid "Dara license"
 msgstr ""
 
@@ -564,9 +679,7 @@ msgid "This license is suspended. Please contact support."
 msgstr ""
 
 #: includes/license.php:294
-msgid ""
-"This key is already active on another domain. Deactivate it there first, or "
-"contact support."
+msgid "This key is already active on another domain. Deactivate it there first, or contact support."
 msgstr ""
 
 #: includes/license.php:295
@@ -574,14 +687,11 @@ msgid "This domain is no longer activated on this key."
 msgstr ""
 
 #: includes/license.php:296
-msgid ""
-"The site address changed. Activate the license again for the new domain."
+msgid "The site address changed. Activate the license again for the new domain."
 msgstr ""
 
 #: includes/license.php:297
-msgid ""
-"The license could not be checked for a while. Check your server can reach "
-"the license server."
+msgid "The license could not be checked for a while. Check your server can reach the license server."
 msgstr ""
 
 #: includes/license.php:298
@@ -600,8 +710,8 @@ msgstr ""
 msgid "Active"
 msgstr ""
 
+#. translators: %s: domain.
 #: includes/license.php:323
-#, php-format
 msgid "licensed for %s"
 msgstr ""
 
@@ -610,34 +720,36 @@ msgid "Local / staging site"
 msgstr ""
 
 #: includes/license.php:326
-msgid ""
-"all features are unlocked for development. Activate on your live domain."
+msgid "all features are unlocked for development. Activate on your live domain."
 msgstr ""
 
 #: includes/license.php:328
 msgid "Not activated"
 msgstr ""
 
+#. translators: %s: date.
 #: includes/license.php:339
-#, php-format
 msgid "Updates and support until %s."
 msgstr ""
 
+#. translators: %s: date.
 #: includes/license.php:339
-#, php-format
-msgid ""
-"Updates and support ended on %s. Renew to get new versions; all features "
-"keep working."
+msgid "Updates and support ended on %s. Renew to get new versions; all features keep working."
 msgstr ""
 
 #: includes/license.php:341
 msgid "Lifetime updates and support."
 msgstr ""
 
+#. translators: %d: days.
+#: includes/license.php:352
+msgid "Trial: all features work for %d more day."
+msgid_plural "Trial: all features work for %d more days."
+msgstr[0] ""
+msgstr[1] ""
+
 #: includes/license.php:353
-msgid ""
-"Dara Pro (blocks, demo import, mortgage calculator, comparison, Google Maps)"
-" and updates need an active license."
+msgid "Dara Pro (blocks, demo import, mortgage calculator, comparison, Google Maps) and updates need an active license."
 msgstr ""
 
 #: includes/license.php:365
@@ -653,8 +765,7 @@ msgid "Install Dara Pro"
 msgstr ""
 
 #: includes/license.php:367
-msgid ""
-"Deactivate the license on this site? You can then use it on another domain."
+msgid "Deactivate the license on this site? You can then use it on another domain."
 msgstr ""
 
 #: includes/license.php:367
@@ -674,9 +785,7 @@ msgid "Buy a license"
 msgstr ""
 
 #: includes/license.php:374
-msgid ""
-"Your key is in your purchase email. One key works on one live domain; local "
-"and staging sites are free."
+msgid "Your key is in your purchase email. One key works on one live domain; local and staging sites are free."
 msgstr ""
 
 #: includes/license.php:388
@@ -687,7 +796,8 @@ msgstr ""
 msgid "License activated. Thank you!"
 msgstr ""
 
-#: includes/license.php:399 includes/license.php:403
+#: includes/license.php:399
+#: includes/license.php:403
 msgid "Dara Pro is installed and active."
 msgstr ""
 
@@ -699,10 +809,15 @@ msgstr ""
 msgid "License deactivated on this site."
 msgstr ""
 
+#. translators: %d: days.
+#: includes/license.php:438
+msgid "Activate your Dara license. Premium features stop in %d day."
+msgid_plural "Activate your Dara license. Premium features stop in %d days."
+msgstr[0] ""
+msgstr[1] ""
+
 #: includes/license.php:439
-msgid ""
-"Dara is not activated on this domain: premium features and updates are "
-"locked, and visitors see an \"unlicensed copy\" notice."
+msgid "Dara is not activated on this domain: premium features and updates are locked, and visitors see an \"unlicensed copy\" notice."
 msgstr ""
 
 #: includes/license.php:445
@@ -717,54 +832,39 @@ msgstr ""
 msgid "Get a license"
 msgstr ""
 
-#: includes/license.php:605
+#: includes/license.php:686
 msgid "Activate a license with active updates to install this update."
 msgstr ""
 
-#: includes/license.php:650
+#: includes/license.php:731
 msgid "Dara Pro is not available for this license yet. Contact support."
 msgstr ""
 
-#: includes/license.php:656
-msgid ""
-"WordPress cannot write files on this server. Check the file permissions."
+#: includes/license.php:737
+msgid "WordPress cannot write files on this server. Check the file permissions."
 msgstr ""
 
-#: includes/license.php:661
+#: includes/license.php:742
 msgid "Dara Pro could not be installed."
 msgstr ""
 
-#: includes/license.php:352
-#, php-format
-msgid "Trial: all features work for %d more day."
-msgid_plural "Trial: all features work for %d more days."
-msgstr[0] ""
-msgstr[1] ""
-
-#: includes/license.php:438
-#, php-format
-msgid "Activate your Dara license. Premium features stop in %d day."
-msgid_plural "Activate your Dara license. Premium features stop in %d days."
-msgstr[0] ""
-msgstr[1] ""
-
+#. translators: %s: item name.
 #: includes/post-types.php:26
-#, php-format
 msgid "Add %s"
 msgstr ""
 
+#. translators: %s: item name.
 #: includes/post-types.php:28
-#, php-format
 msgid "Edit %s"
 msgstr ""
 
+#. translators: %s: item name.
 #: includes/post-types.php:30
-#, php-format
 msgid "View %s"
 msgstr ""
 
+#. translators: %s: items name.
 #: includes/post-types.php:32
-#, php-format
 msgid "Search %s"
 msgstr ""
 
@@ -824,46 +924,14 @@ msgstr ""
 msgid "Feature"
 msgstr ""
 
-msgid "EGP"
+#: includes/schema.php:180
+msgid "Property price"
 msgstr ""
 
-msgid "AED"
+#: includes/schema.php:194
+msgid "For sale / for rent"
 msgstr ""
 
-msgid "KWD"
-msgstr ""
-
-msgid "QAR"
-msgstr ""
-
-msgid "BHD"
-msgstr ""
-
-msgid "OMR"
-msgstr ""
-
-msgid "JOD"
-msgstr ""
-
-msgid "MAD"
-msgstr ""
-
-msgid "USD"
-msgstr ""
-
-msgid "EUR"
-msgstr ""
-
-msgid "GBP"
-msgstr ""
-
-msgid "Currency"
-msgstr ""
-
-msgid "Used for every price and for the price currency search engines read."
-msgstr ""
-
-msgid ""
-"Optional. Shown after prices on cards, details, compare and the mortgage "
-"calculator. Leave empty to use the short name of the currency above."
+#: includes/schema.php:201
+msgid "Property city / district"
 msgstr ""

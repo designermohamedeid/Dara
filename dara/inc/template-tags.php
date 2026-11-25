@@ -121,6 +121,12 @@ function dara_defaults() {
 		// Performance.
 		'perf_emoji'         => true,
 		'perf_block_css'     => true,
+		'perf_inline_css'    => true,
+		'perf_webp'          => true,
+		'perf_prefetch'      => true,
+		'ux_motion'          => true,
+		'ux_back_to_top'     => true,
+		'ux_recent'          => true,
 		'map_provider'       => 'osm',
 		'map_google_key'     => '',
 		'map_tiles'          => 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -351,17 +357,11 @@ function dara_listing_title() {
 }
 
 /**
- * Breadcrumbs (Yoast / Rank Math when present).
+ * Breadcrumb trail of the current view: array of array( url, label ); the last item has no URL.
+ *
+ * @return array
  */
-function dara_breadcrumbs() {
-	if ( function_exists( 'yoast_breadcrumb' ) ) {
-		yoast_breadcrumb( '<nav class="breadcrumbs" aria-label="' . esc_attr__( 'Breadcrumbs', 'dara' ) . '">', '</nav>' );
-		return;
-	}
-	if ( function_exists( 'rank_math_the_breadcrumbs' ) ) {
-		rank_math_the_breadcrumbs();
-		return;
-	}
+function dara_breadcrumb_items() {
 	$items = array( array( home_url( '/' ), __( 'Home', 'dara' ) ) );
 	if ( is_singular() && ! is_page() ) {
 		$type = get_post_type();
@@ -377,7 +377,7 @@ function dara_breadcrumbs() {
 			}
 		}
 	} elseif ( is_page() ) {
-		foreach ( array_reverse( get_post_ancestors( get_the_ID() ) ) as $a ) {
+		foreach ( array_reverse( get_post_ancestors( get_queried_object_id() ) ) as $a ) {
 			$items[] = array( get_permalink( $a ), get_the_title( $a ) );
 		}
 	} elseif ( is_tax( array( 'property_type', 'property_city' ) ) ) {
@@ -386,10 +386,30 @@ function dara_breadcrumbs() {
 		$devs    = dara_template_url( 'page-templates/developers.php' );
 		$items[] = $devs ? array( $devs, get_the_title( url_to_postid( $devs ) ) ) : array( get_post_type_archive_link( 'dara_project' ), get_post_type_object( 'dara_project' )->labels->name );
 	}
-	$items[] = array( '', is_singular() ? get_the_title() : dara_page_title() );
+	$items[] = array( '', is_singular() ? get_the_title( get_queried_object_id() ) : dara_page_title() );
+	return apply_filters( 'dara_breadcrumb_items', $items );
+}
 
+/**
+ * Breadcrumbs: Yoast / Rank Math when their breadcrumbs are switched on, the theme's trail otherwise.
+ */
+function dara_breadcrumbs() {
+	$provider = dara_breadcrumbs_provider();
+	if ( 'yoast' === $provider ) {
+		yoast_breadcrumb( '<nav class="breadcrumbs" aria-label="' . esc_attr__( 'Breadcrumbs', 'dara' ) . '">', '</nav>' );
+		return;
+	}
+	if ( 'rank_math' === $provider ) {
+		rank_math_the_breadcrumbs(
+			array(
+				'wrap_before' => '<nav class="breadcrumbs breadcrumbs--rank-math" aria-label="' . esc_attr__( 'Breadcrumbs', 'dara' ) . '"><p>',
+				'wrap_after'  => '</p></nav>',
+			)
+		);
+		return;
+	}
 	echo '<nav class="breadcrumbs" aria-label="' . esc_attr__( 'Breadcrumbs', 'dara' ) . '"><ol>';
-	foreach ( $items as $item ) {
+	foreach ( dara_breadcrumb_items() as $item ) {
 		echo $item[0] ? '<li><a href="' . esc_url( $item[0] ) . '">' . esc_html( $item[1] ) . '</a></li>' : '<li aria-current="page">' . esc_html( $item[1] ) . '</li>';
 	}
 	echo '</ol></nav>';
@@ -631,4 +651,127 @@ function dara_project_unit_label( $unit ) {
 	$model = isset( $unit[0] ) ? trim( $unit[0] ) : '';
 	$type  = isset( $unit[1] ) ? trim( $unit[1] ) : '';
 	return $model && $type ? $model . ' — ' . $type : $model . $type;
+}
+
+/**
+ * Active search filters as removable chips (listing page).
+ *
+ * Each chip links to the same search without that one filter, so it works
+ * with no JavaScript and keeps the back button meaningful.
+ */
+function dara_filter_chips() {
+	if ( ! function_exists( 'dara_get_filters' ) || ! dara_filters_active() ) {
+		return;
+	}
+	$f    = dara_get_filters();
+	$base = strtok( (string) get_pagenum_link( 1, false ), '?' );
+	$args = array();
+	foreach ( $f as $k => $v ) {
+		if ( '' !== $v && array() !== $v && ! ( 'sort' === $k && 'newest' === $v ) ) {
+			$args[ $k ] = $v;
+		}
+	}
+	$url = function ( $drop_key, $drop_value = null ) use ( $base, $args ) {
+		$next = $args;
+		if ( null !== $drop_value && is_array( $next[ $drop_key ] ) ) {
+			$next[ $drop_key ] = array_values( array_diff( $next[ $drop_key ], array( $drop_value ) ) );
+			if ( ! $next[ $drop_key ] ) {
+				unset( $next[ $drop_key ] );
+			}
+		} else {
+			unset( $next[ $drop_key ] );
+		}
+		return $next ? $base . '?' . http_build_query( $next ) : $base;
+	};
+	$term_name = function ( $slug, $tax ) {
+		$t = get_term_by( 'slug', $slug, $tax );
+		return $t ? $t->name : $slug;
+	};
+	$range = function ( $min, $max, $unit ) {
+		if ( '' !== $min && '' !== $max ) {
+			return dara_number( $min ) . ' – ' . dara_number( $max ) . $unit;
+		}
+		/* translators: %s: value. */
+		return '' !== $min ? sprintf( __( 'From %s', 'dara' ), dara_number( $min ) . $unit ) : sprintf( __( 'Up to %s', 'dara' ), dara_number( $max ) . $unit );
+	};
+
+	$chips = array();
+	if ( $f['purpose'] ) {
+		$chips[] = array( dara_purpose_label( $f['purpose'] ), $url( 'purpose' ) );
+	}
+	if ( $f['location'] ) {
+		$chips[] = array( $f['location'], $url( 'location' ) );
+	}
+	foreach ( $f['type'] as $slug ) {
+		$chips[] = array( $term_name( $slug, 'property_type' ), $url( 'type', $slug ) );
+	}
+	if ( '' !== $f['min_price'] || '' !== $f['max_price'] ) {
+		$chips[] = array( $range( $f['min_price'], $f['max_price'], '' ), remove_query_arg( 'max_price', $url( 'min_price' ) ) );
+	}
+	if ( '' !== $f['beds'] ) {
+		/* translators: %s: number of bedrooms. */
+		$chips[] = array( sprintf( __( '%s+ bedrooms', 'dara' ), dara_number( $f['beds'] ) ), $url( 'beds' ) );
+	}
+	if ( '' !== $f['baths'] ) {
+		/* translators: %s: number of bathrooms. */
+		$chips[] = array( sprintf( __( '%s+ bathrooms', 'dara' ), dara_number( $f['baths'] ) ), $url( 'baths' ) );
+	}
+	if ( '' !== $f['min_area'] || '' !== $f['max_area'] ) {
+		$chips[] = array( $range( $f['min_area'], $f['max_area'], ' ' . __( 'm²', 'dara' ) ), remove_query_arg( 'max_area', $url( 'min_area' ) ) );
+	}
+	foreach ( $f['features'] as $slug ) {
+		$chips[] = array( $term_name( $slug, 'property_feature' ), $url( 'features', $slug ) );
+	}
+	if ( ! $chips ) {
+		return;
+	}
+	echo '<ul class="filter-chips" aria-label="' . esc_attr__( 'Active filters', 'dara' ) . '">';
+	foreach ( $chips as $chip ) {
+		printf(
+			'<li><a class="filter-chip" href="%1$s"><span>%2$s</span>%3$s<span class="screen-reader-text">%4$s</span></a></li>',
+			esc_url( $chip[1] ),
+			esc_html( $chip[0] ),
+			dara_icon( 'close', 14 ), // phpcs:ignore WordPress.Security.EscapeOutput
+			esc_html__( 'Remove filter', 'dara' )
+		);
+	}
+	printf( '<li><a class="filter-chips__clear" href="%1$s">%2$s</a></li>', esc_url( $base ), esc_html__( 'Clear all', 'dara' ) );
+	echo '</ul>';
+}
+
+/**
+ * Number of active filters (badge on the mobile "Filters" button).
+ *
+ * @return int
+ */
+function dara_filter_count() {
+	if ( ! function_exists( 'dara_get_filters' ) ) {
+		return 0;
+	}
+	$f = dara_get_filters();
+	unset( $f['sort'] );
+	$n = 0;
+	foreach ( $f as $k => $v ) {
+		if ( in_array( $k, array( 'max_price', 'max_area' ), true ) && '' !== $f[ str_replace( 'max', 'min', $k ) ] ) {
+			continue;
+		}
+		$n += is_array( $v ) ? count( $v ) : ( '' !== $v ? 1 : 0 );
+	}
+	return $n;
+}
+
+/**
+ * "Recently viewed" strip, filled from the visitor's browser history (localStorage).
+ *
+ * @param int $current Current property ID (recorded, and left out of the list).
+ */
+function dara_recent_section( $current = 0 ) {
+	if ( ! dara_mod( 'ux_recent' ) || ! post_type_exists( 'dara_property' ) ) {
+		return;
+	}
+	printf(
+		'<section class="related recent" data-recent="%1$d" hidden><h2 class="section-title">%2$s</h2><div class="grid grid--cards" data-recent-list></div></section>',
+		(int) $current,
+		esc_html__( 'Recently viewed', 'dara' )
+	);
 }

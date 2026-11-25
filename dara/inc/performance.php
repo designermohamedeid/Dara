@@ -51,43 +51,72 @@ add_action( 'wp_enqueue_scripts', 'dara_trim_block_css', 100 );
 add_filter( 'should_load_separate_core_block_assets', '__return_true' );
 
 /**
- * Meta description fallback when no SEO plugin is active.
- */
-function dara_meta_description() {
-	if ( defined( 'WPSEO_VERSION' ) || defined( 'RANK_MATH_VERSION' ) || defined( 'AIOSEO_VERSION' ) || defined( 'SEOPRESS_VERSION' ) || defined( 'THE_SEO_FRAMEWORK_VERSION' ) ) {
-		return;
-	}
-	$desc = '';
-	if ( is_front_page() ) {
-		$desc = get_bloginfo( 'description' ) ? get_bloginfo( 'description' ) : dara_mod( 'hero_text' );
-	} elseif ( is_singular() ) {
-		$post = get_queried_object();
-		$desc = has_excerpt( $post ) ? get_the_excerpt( $post ) : wp_trim_words( wp_strip_all_tags( strip_shortcodes( $post->post_content ) ), 30, '…' );
-	} elseif ( is_home() ) {
-		$desc = get_bloginfo( 'description' );
-	} elseif ( is_post_type_archive( 'dara_property' ) ) {
-		$desc = dara_listing_title() . ' — ' . get_bloginfo( 'name' );
-	} elseif ( is_archive() ) {
-		$desc = wp_strip_all_tags( get_the_archive_description() );
-	}
-	$desc = trim( preg_replace( '/\s+/', ' ', $desc ) );
-	if ( $desc ) {
-		echo '<meta name="description" content="' . esc_attr( wp_html_excerpt( $desc, 160, '…' ) ) . '">' . "\n";
-	}
-}
-add_action( 'wp_head', 'dara_meta_description', 2 );
-
-/**
- * Keep comparison pages out of search results (they are per-visitor).
+ * New JPEG uploads get WebP sub-sizes (smaller files, same quality).
  *
- * @param array $robots Robots directives.
+ * @param array $formats Mime map.
  * @return array
  */
-function dara_compare_noindex( $robots ) {
-	if ( is_page_template( 'page-templates/compare.php' ) ) {
-		$robots['noindex'] = true;
-		$robots['follow']  = true;
+function dara_webp_uploads( $formats ) {
+	if ( dara_mod( 'perf_webp' ) && wp_image_editor_supports( array( 'mime_type' => 'image/webp' ) ) ) {
+		$formats['image/jpeg'] = 'image/webp';
 	}
-	return $robots;
+	return $formats;
 }
-add_filter( 'wp_robots', 'dara_compare_noindex' );
+add_filter( 'image_editor_output_format', 'dara_webp_uploads' );
+
+/**
+ * Prefetch a page when the visitor hovers / presses a link, so it opens almost
+ * instantly. WordPress 6.8+ ships Speculation Rules (eagerness "conservative");
+ * this moves it to "moderate". Older WordPress gets an equivalent rule set.
+ *
+ * @param array|null $config Core configuration.
+ * @return array|null
+ */
+function dara_speculation_config( $config ) {
+	if ( dara_mod( 'perf_prefetch' ) && is_array( $config ) && ( empty( $config['eagerness'] ) || 'auto' === $config['eagerness'] ) ) {
+		$config['eagerness'] = 'moderate';
+	}
+	return $config;
+}
+add_filter( 'wp_speculation_rules_configuration', 'dara_speculation_config' );
+
+/**
+ * Speculation Rules for WordPress older than 6.8.
+ */
+function dara_speculation_rules_legacy() {
+	if ( function_exists( 'wp_get_speculation_rules_configuration' ) || ! dara_mod( 'perf_prefetch' ) || is_user_logged_in() ) {
+		return;
+	}
+	$rules = array(
+		'prefetch' => array(
+			array(
+				'source'    => 'document',
+				'where'     => array(
+					'and' => array(
+						array( 'href_matches' => '/*' ),
+						array( 'not' => array( 'href_matches' => array( '/wp-*.php', '/wp-admin/*', '/wp-content/*', '/*\\?*' ) ) ),
+						array( 'not' => array( 'selector_matches' => 'a[rel~="nofollow"], a[target="_blank"], .no-prefetch' ) ),
+					),
+				),
+				'eagerness' => 'moderate',
+			),
+		),
+	);
+	echo '<script type="speculationrules">' . wp_json_encode( $rules, JSON_UNESCAPED_SLASHES ) . '</script>' . "\n";
+}
+add_action( 'wp_footer', 'dara_speculation_rules_legacy' );
+
+/**
+ * Default favicon in the brand colours until a Site Icon is set
+ * (Customize > Site Identity). Also stops the /favicon.ico 404.
+ */
+function dara_default_favicon() {
+	if ( has_site_icon() ) {
+		return;
+	}
+	$base = DARA_URI . '/assets/images/';
+	printf( '<link rel="icon" href="%s" type="image/svg+xml">' . "\n", esc_url( $base . 'favicon.svg' ) );
+	printf( '<link rel="icon" href="%s" sizes="32x32" type="image/png">' . "\n", esc_url( $base . 'favicon-32.png' ) );
+	printf( '<link rel="apple-touch-icon" href="%s">' . "\n", esc_url( $base . 'apple-touch-icon.png' ) );
+}
+add_action( 'wp_head', 'dara_default_favicon', 3 );

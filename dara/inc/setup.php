@@ -108,6 +108,9 @@ function dara_body_class( $classes ) {
 	if ( dara_header_is_overlay() ) {
 		$classes[] = 'has-overlay-header';
 	}
+	if ( dara_mod( 'ux_motion' ) ) {
+		$classes[] = 'dara-motion';
+	}
 	return $classes;
 }
 add_filter( 'body_class', 'dara_body_class' );

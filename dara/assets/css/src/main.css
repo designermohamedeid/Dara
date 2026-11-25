@@ -501,7 +501,7 @@ a.page-numbers:hover{border-color:var(--primary);color:var(--primary)}
 	.units__ask{grid-column:1/-1;width:auto;padding-top:6px}
 	.units__ask:empty{display:none}
 	.units__ask-link{display:block;padding:10px;border:1px solid var(--primary);border-radius:var(--radius);text-align:center}
-	.units__row--sold{opacity:.7}
+	.units__row--sold{background:var(--surface)}.units__row--sold .units__price bdi{color:var(--muted);text-decoration:line-through}
 }
 .status{display:inline-block;padding:3px 12px;border-radius:999px;font-size:13px;font-weight:600}
 .status--available{background:var(--primary-50);color:var(--primary)}
@@ -812,3 +812,34 @@ body.has-cmp-bar--min{padding-bottom:60px}
 @media print{.compare__bar,.compare__remove,.compare__actions,.compare__help,.cmp-bar{display:none!important}.compare__table{min-width:0}}
 
 @media (max-width:640px){.compare__table tbody th,.compare__corner{width:120px}.compare__table th,.compare__table td{padding:12px}}
+
+/* ===== 1.9: interactions & usability ===== */
+/* Rank Math breadcrumbs inside the theme's head */
+.breadcrumbs--rank-math p{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 10px;font-size:14px;color:var(--muted)}
+.breadcrumbs--rank-math .separator{color:#AAB4C0}
+.page-head:has(+ .listing){margin-bottom:32px}
+/* Active filter chips */
+.filter-chips{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:-8px 0 20px;padding:0;list-style:none}
+.filter-chip{display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:0 12px;border:1px solid var(--primary);border-radius:999px;background:var(--primary-50);color:var(--primary-700);font-size:14px;font-weight:500;transition:background-color .2s,color .2s}
+.filter-chip:hover,.filter-chip:focus-visible{background:var(--primary);color:#fff}
+.filter-chips__clear{display:inline-flex;align-items:center;min-height:36px;padding:0 6px;color:var(--muted);font-size:14px;text-decoration:underline;text-underline-offset:3px}
+.filter-chips__clear:hover{color:var(--danger)}
+.badge-count{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:var(--primary);color:#fff;font-size:12px;line-height:1}
+/* Recently viewed */
+.recent{margin-top:var(--section)}
+.recent .section-title{margin-bottom:24px}
+.recent.is-pending [data-recent-list]{min-height:260px}
+/* Back to top */
+.to-top{position:fixed;inset-inline-end:16px;bottom:24px;z-index:39;display:grid;place-items:center;width:48px;height:48px;border:1px solid var(--line);border-radius:50%;background:#fff;color:var(--ink);box-shadow:var(--shadow);cursor:pointer;transition:transform .2s,background-color .2s,color .2s}
+.to-top:hover{background:var(--primary);color:#fff;transform:translateY(-2px)}
+.to-top[hidden]{display:none}
+body.has-cmp-bar .to-top{bottom:110px}
+@media (max-width:767px){body:has(.mobile-bar) .to-top{bottom:calc(84px + env(safe-area-inset-bottom))}body:has(.mobile-bar).has-cmp-bar .to-top{bottom:calc(190px + env(safe-area-inset-bottom))}}
+@media print{.to-top,.filter-chips,.recent{display:none!important}}
+/* Motion: sections rise in as they scroll into view (CSS scroll-driven, no JS) */
+@keyframes dara-rise{from{opacity:0;transform:translateY(28px)}}
+@media (prefers-reduced-motion:no-preference){
+	@supports (animation-timeline:view()){
+		.dara-motion :is(.grid--cards>.card,.grid>.card,.section-head,.tile,.service,.why__media,.sp-section,.pj-section,.timeline li,.recent .card){animation:dara-rise linear both;animation-timeline:view();animation-range:entry 0% entry 35%}
+	}
+}
